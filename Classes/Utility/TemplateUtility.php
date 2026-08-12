@@ -4,18 +4,16 @@ declare(strict_types=1);
 namespace In2code\Powermail\Utility;
 
 use In2code\Powermail\Domain\Model\Mail;
+use In2code\Powermail\Fluid\RestrictedStringRenderer;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\View\ViewFactoryData;
 use TYPO3\CMS\Core\View\ViewFactoryInterface;
 use TYPO3\CMS\Core\View\ViewInterface;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
-use TYPO3\CMS\Fluid\Core\Rendering\RenderingContextFactory;
-use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
  * Class TemplateUtility
- * @codeCoverageIgnore
  */
 class TemplateUtility
 {
@@ -23,6 +21,8 @@ class TemplateUtility
      *  Get absolute paths for templates with fallback
      *     Returns paths from *RootPaths and "hardcoded"
      *     paths pointing to the EXT:powermail-resources.
+     *
+     * @codeCoverageIgnore
      */
     public static function getTemplateFolders(string $part = 'template'): array
     {
@@ -54,6 +54,8 @@ class TemplateUtility
      *  Return path and filename for a file or path.
      *  Only the first existing file/path will be returned.
      *  respect *RootPaths
+     *
+     * @codeCoverageIgnore
      */
     public static function getTemplatePath(string $pathAndFilename, string $part = 'template'): string
     {
@@ -65,6 +67,8 @@ class TemplateUtility
      *  Return path and filename for one or many files/paths.
      *         Only existing files/paths will be returned.
      *         respect *RootPaths
+     *
+     * @codeCoverageIgnore
      */
     public static function getTemplatePaths(string $pathAndFilename, string $part = 'template'): array
     {
@@ -106,6 +110,8 @@ class TemplateUtility
 
     /**
      * This functions renders the powermail_all Template (e.g. useage in Mails)
+     *
+     * @codeCoverageIgnore
      */
     public static function powermailAll(
         Mail $mail,
@@ -128,15 +134,11 @@ class TemplateUtility
     /**
      * Parse String with Fluid View
      *
-     * ViewFactoryInterface (the StandaloneView replacement, see
-     * powermailAll() above) only renders from a file path, not a raw
-     * string, so this case has no direct ViewFactory equivalent. Instead
-     * this drives the underlying Fluid engine directly - the same one
-     * ViewFactoryInterface uses internally - via
-     * TYPO3Fluid\Fluid\View\TemplatePaths::setTemplateSource(), which
-     * TYPO3 core did not remove (only its own CMS-specific View wrapper
-     * classes were removed). UNVERIFIED against a real TYPO3 v14
-     * installation - re-check against a live instance before relying on it.
+     * Only variables and the ViewHelpers configured in the extension configuration are evaluated -
+     * some of the parsed values can hold data that was submitted by a website visitor, which would
+     * otherwise allow arbitrary ViewHelper execution from an unauthenticated request.
+     *
+     * @param array<string, mixed> $variables
      */
     public static function fluidParseString(string $string, array $variables = []): string
     {
@@ -148,11 +150,6 @@ class TemplateUtility
             return $string;
         }
 
-        $renderingContext = GeneralUtility::makeInstance(RenderingContextFactory::class)
-            ->create([], $GLOBALS['TYPO3_REQUEST'] ?? null);
-        $renderingContext->getTemplatePaths()->setTemplateSource($string);
-        $view = new TemplateView($renderingContext);
-        $view->assignMultiple($variables);
-        return $view->render() ?? '';
+        return GeneralUtility::makeInstance(RestrictedStringRenderer::class)->render($string, $variables);
     }
 }
