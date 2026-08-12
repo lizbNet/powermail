@@ -11,6 +11,7 @@ use In2code\Powermail\Domain\Repository\MailRepository;
 use In2code\Powermail\Domain\Repository\PageRepository;
 use In2code\Powermail\Domain\Service\SlidingWindowPagination;
 use In2code\Powermail\Exception\FileCannotBeCreatedException;
+use In2code\Powermail\Exception\NoPageAccessException;
 use In2code\Powermail\Utility\BackendUtility;
 use In2code\Powermail\Utility\BasicFileUtility;
 use In2code\Powermail\Utility\ConfigurationUtility;
@@ -70,7 +71,14 @@ class ModuleController extends AbstractController
     protected function initializeAction(): void
     {
         $this->piVars = $this->request->getArguments();
-        $this->id = (int)($this->request->getParsedBody()['id'] ?? $this->request->getQueryParams()['id'] ?? null);
+        $this->id = (int)($this->request->getQueryParams()['id'] ?? $this->request->getParsedBody()['id'] ?? null);
+
+        // Security: enforce page access on the resolved (int) id. The framework's BackendModuleValidator only
+        // checks canonical integer ids (MathUtility::canBeInterpretedAsInteger()), so a non-canonical id such
+        // as "09002" would otherwise bypass its check while still resolving to a foreign pid here.
+        if ($this->id > 0 && !BackendUtility::isPageAccessGranted($this->id)) {
+            throw new NoPageAccessException('You don\'t have access to this page', 1755000000);
+        }
 
         $this->moduleData = $this->request->getAttribute('moduleData');
         $this->moduleTemplate = $this->moduleTemplateFactory->create($this->request);
