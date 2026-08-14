@@ -5,6 +5,7 @@ namespace In2code\Powermail\Utility;
 
 use In2code\Powermail\Exception\FileCannotBeCreatedException;
 use Throwable;
+use TYPO3\CMS\Core\Crypto\HashService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
 
@@ -84,6 +85,6 @@ class BasicFileUtility
 
     public static function getHmacForFile(string $file): string
     {
-        return GeneralUtility::hmac($file, '_powermail');
+        return GeneralUtility::makeInstance(HashService::class)->hmac($file, '_powermail');
     }
 }
