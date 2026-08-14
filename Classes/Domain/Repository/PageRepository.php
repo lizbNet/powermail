@@ -48,9 +48,15 @@ class PageRepository extends AbstractRepository
 
         $searchString = '%<field index=\"settings.flexform.main.form\">';
         $searchString .= '\n                    <value index=\"vDEF\">' . $form->getUid() . '</value>%';
+        // TYPO3 v14 port: tt_content.list_type and CType="list" were both
+        // removed from core (see Changelog Breaking-105377), so the
+        // pre-v11 list_type-based plugin registration this used to also
+        // match for is no longer queryable/possible - by the time an
+        // install reaches v14 it has already passed through
+        // PowermailPluginUpdater's list_type -> CType migration.
         $sql = 'select distinct pages.title, pages.uid';
         $sql .= ' from pages left join tt_content on tt_content.pid = pages.uid';
-        $sql .= ' where (tt_content.CType = "list" and tt_content.list_type = "powermail_pi1" or tt_content.CType = "powermail_pi1")';
+        $sql .= ' where tt_content.CType = "powermail_pi1"';
         $sql .= ' and tt_content.deleted = 0 and pages.deleted = 0';
         $sql .= ' and tt_content.pi_flexform like "' . $searchString . '"';
 
