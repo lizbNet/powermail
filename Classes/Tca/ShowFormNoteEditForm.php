@@ -72,9 +72,8 @@ class ShowFormNoteEditForm extends AbstractFormElement
      */
     protected function getHtml(): string
     {
-        $standaloneView = TemplateUtility::getDefaultStandAloneView();
-        $standaloneView->setTemplatePathAndFilename(GeneralUtility::getFileAbsFileName($this->templatePathAndFile));
-        $standaloneView->assignMultiple(
+        $view = TemplateUtility::getView(GeneralUtility::getFileAbsFileName($this->templatePathAndFile));
+        $view->assignMultiple(
             [
                 'formProperties' => $this->getFormProperties(),
                 'labels' => $this->getLabels(),
@@ -85,7 +84,7 @@ class ShowFormNoteEditForm extends AbstractFormElement
                 'relatedFields' => $this->getRelatedFields(),
             ]
         );
-        return $standaloneView->render();
+        return $view->render();
     }
 
     protected function getLabels(): array

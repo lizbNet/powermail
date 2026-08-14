@@ -19,6 +19,8 @@ use TYPO3\CMS\Core\Mail\MailMessage;
 use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 use TYPO3\CMS\Core\Utility\ArrayUtility as ArrayUtilityCore;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\View\ViewFactoryData;
+use TYPO3\CMS\Core\View\ViewFactoryInterface;
 use TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException;
 use TYPO3\CMS\Extbase\Mvc\Request;
 
@@ -42,8 +44,10 @@ class SendMailService
     /**
      * Constructor
      */
-    public function __construct(private readonly Request $request)
-    {
+    public function __construct(
+        private readonly Request $request,
+        private readonly ViewFactoryInterface $viewFactory,
+    ) {
         $this->eventDispatcher = GeneralUtility::makeInstance(EventDispatcherInterface::class);
     }
 
@@ -324,16 +328,21 @@ class SendMailService
      */
     protected function createEmailBody(array $email): string
     {
-        $standaloneView = TemplateUtility::getDefaultStandAloneView();
-        $standaloneView->setRequest($this->request);
-        $standaloneView->setTemplatePathAndFilename(TemplateUtility::getTemplatePath($email['template'] . '.html'));
+        $view = $this->viewFactory->create(
+            new ViewFactoryData(
+                layoutRootPaths: TemplateUtility::getTemplateFolders('layout'),
+                partialRootPaths: TemplateUtility::getTemplateFolders('partial'),
+                templatePathAndFilename: TemplateUtility::getTemplatePath($email['template'] . '.html'),
+                request: $this->request,
+            )
+        );
 
         // variables
         $mailRepository = GeneralUtility::makeInstance(MailRepository::class);
         $variablesWithMarkers = $mailRepository->getVariablesWithMarkersFromMail($this->mail);
-        $standaloneView->assignMultiple($variablesWithMarkers);
-        $standaloneView->assignMultiple($mailRepository->getLabelsWithMarkersFromMail($this->mail));
-        $standaloneView->assignMultiple(
+        $view->assignMultiple($variablesWithMarkers);
+        $view->assignMultiple($mailRepository->getLabelsWithMarkersFromMail($this->mail));
+        $view->assignMultiple(
             [
                 'variablesWithMarkers' => ArrayUtility::htmlspecialcharsOnArray($variablesWithMarkers),
                 'powermail_all' => TemplateUtility::powermailAll($this->mail, 'mail', $this->settings, $this->type),
@@ -345,14 +354,14 @@ class SendMailService
             ]
         );
         if (!empty($email['variables'])) {
-            $standaloneView->assignMultiple($email['variables']);
+            $view->assignMultiple($email['variables']);
         }
 
         /** @var SendMailServiceCreateEmailBodyEvent $event */
         $event = $this->eventDispatcher->dispatch(
-            new SendMailServiceCreateEmailBodyEvent($standaloneView, $email, $this, $this->request)
+            new SendMailServiceCreateEmailBodyEvent($view, $email, $this, $this->request)
         );
-        $body = $event->getStandaloneView()->render();
+        $body = $event->getView()->render();
         $this->mail->setBody($body);
         return $body;
     }

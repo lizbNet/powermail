@@ -5,26 +5,32 @@ namespace In2code\Powermail\Events;
 
 use In2code\Powermail\Domain\Service\Mail\SendMailService;
 use Psr\Http\Message\ServerRequestInterface;
-use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Core\View\ViewInterface;
 
+/**
+ * TYPO3 v14 port: StandaloneView was removed from core (see Changelog
+ * Breaking-105377/Feature-104773-GenericViewFactory), so the property/getter/
+ * setter here changed from StandaloneView to the replacement ViewInterface.
+ * This is a breaking change for anyone listening to this PSR-14 event.
+ */
 final class SendMailServiceCreateEmailBodyEvent
 {
     public function __construct(
-        protected StandaloneView $standaloneView,
+        protected ViewInterface $view,
         protected array $email,
         protected SendMailService $sendMailService,
         private ?ServerRequestInterface $request = null
     ) {
     }
 
-    public function getStandaloneView(): StandaloneView
+    public function getView(): ViewInterface
     {
-        return $this->standaloneView;
+        return $this->view;
     }
 
-    public function setStandaloneView(StandaloneView $standaloneView): SendMailServiceCreateEmailBodyEvent
+    public function setView(ViewInterface $view): SendMailServiceCreateEmailBodyEvent
     {
-        $this->standaloneView = $standaloneView;
+        $this->view = $view;
         return $this;
     }
 

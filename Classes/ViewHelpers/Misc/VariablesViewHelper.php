@@ -8,10 +8,12 @@ use In2code\Powermail\Domain\Repository\MailRepository;
 use In2code\Powermail\Domain\Service\ConfigurationService;
 use In2code\Powermail\Utility\ArrayUtility;
 use In2code\Powermail\Utility\TemplateUtility;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\Core\Rendering\RenderingContext;
-use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Fluid\Core\Rendering\RenderingContextFactory;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
  * Class VariablesViewHelper
@@ -48,6 +50,16 @@ class VariablesViewHelper extends AbstractViewHelper
 
     /**
      * @return string
+     *
+     * TYPO3 v14 port: StandaloneView (incl. its setTemplateSource() for
+     * rendering a raw string) was removed from core, and so was
+     * RenderingContext::getRequest()/setRequest() (see Changelog
+     * Deprecation-104684-FluidRenderingContext-getRequest - the request is
+     * now a rendering context attribute instead). There's no ViewFactory
+     * equivalent for rendering from a string (see
+     * TemplateUtility::fluidParseString()), so this drives the underlying
+     * Fluid engine directly instead. UNVERIFIED against a real TYPO3 v14
+     * installation.
      */
     public function render(): string
     {
@@ -55,9 +67,14 @@ class VariablesViewHelper extends AbstractViewHelper
         $type = $this->arguments['type'];
         $function = $this->arguments['function'];
         $mailRepository = GeneralUtility::makeInstance(MailRepository::class);
-        $parseObject = GeneralUtility::makeInstance(StandaloneView::class);
-        $parseObject->setRequest($this->renderingContext->getRequest());
-        $parseObject->setTemplateSource($this->removePowermailAllParagraphTagWrap($this->renderChildren()));
+        $request = $this->renderingContext->hasAttribute(ServerRequestInterface::class)
+            ? $this->renderingContext->getAttribute(ServerRequestInterface::class)
+            : null;
+        $renderingContext = GeneralUtility::makeInstance(RenderingContextFactory::class)->create([], $request);
+        $renderingContext->getTemplatePaths()->setTemplateSource(
+            $this->removePowermailAllParagraphTagWrap($this->renderChildren())
+        );
+        $parseObject = new TemplateView($renderingContext);
         $parseObject->assignMultiple(
             ArrayUtility::htmlspecialcharsOnArray($mailRepository->getVariablesWithMarkersFromMail($mail))
         );

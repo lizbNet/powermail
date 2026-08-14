@@ -77,9 +77,8 @@ class PluginPreviewRenderer extends StandardContentPreviewRenderer
      */
     protected function getPluginInformation(string $pluginName, array $row): string
     {
-        $standaloneView = TemplateUtility::getDefaultStandAloneView();
-        $standaloneView->setTemplatePathAndFilename(GeneralUtility::getFileAbsFileName($this->templatePathAndFile));
-        $standaloneView->assignMultiple(
+        $view = TemplateUtility::getView(GeneralUtility::getFileAbsFileName($this->templatePathAndFile));
+        $view->assignMultiple(
             [
                 'row' => $row,
                 'flexFormData' => $this->flexFormData,
@@ -97,7 +96,7 @@ class PluginPreviewRenderer extends StandardContentPreviewRenderer
                 ),
             ]
         );
-        return $standaloneView->render();
+        return $view->render();
     }
 
     /**

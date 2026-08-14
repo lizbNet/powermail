@@ -6,8 +6,12 @@ namespace In2code\Powermail\Utility;
 use In2code\Powermail\Domain\Model\Mail;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\View\ViewFactoryData;
+use TYPO3\CMS\Core\View\ViewFactoryInterface;
+use TYPO3\CMS\Core\View\ViewInterface;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
-use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Fluid\Core\Rendering\RenderingContextFactory;
+use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
  * Class TemplateUtility
@@ -76,18 +80,28 @@ class TemplateUtility
     }
 
     /**
-     * Get a default Standalone view
+     * Get a view for a known template file.
+     *
+     * Ported from StandaloneView (removed in TYPO3 v14, see Changelog
+     * Breaking-105377/Feature-104773-GenericViewFactory) to the core
+     * ViewFactoryInterface replacement. Unlike StandaloneView, the
+     * replacement is immutable and needs the template path upfront
+     * (there is no setTemplatePathAndFilename() on the resulting view),
+     * so callers that used to build a StandaloneView first and set the
+     * template path after now pass it in here directly.
      */
-    public static function getDefaultStandAloneView(
-        string $format = 'html'
-    ): StandaloneView {
-        /** @var StandaloneView $standaloneView */
-        $standaloneView = GeneralUtility::makeInstance(StandaloneView::class);
-        $standaloneView->setFormat($format);
-        $standaloneView->setRequest($GLOBALS['TYPO3_REQUEST']);
-        $standaloneView->setLayoutRootPaths(self::getTemplateFolders('layout'));
-        $standaloneView->setPartialRootPaths(self::getTemplateFolders('partial'));
-        return $standaloneView;
+    public static function getView(string $templatePathAndFilename, string $format = 'html'): ViewInterface
+    {
+        $viewFactory = GeneralUtility::makeInstance(ViewFactoryInterface::class);
+        return $viewFactory->create(
+            new ViewFactoryData(
+                layoutRootPaths: self::getTemplateFolders('layout'),
+                partialRootPaths: self::getTemplateFolders('partial'),
+                templatePathAndFilename: $templatePathAndFilename,
+                request: $GLOBALS['TYPO3_REQUEST'] ?? null,
+                format: $format,
+            )
+        );
     }
 
     /**
@@ -99,9 +113,8 @@ class TemplateUtility
         array $settings = [],
         ?string $type = null
     ): ?string {
-        $standaloneView = self::getDefaultStandAloneView();
-        $standaloneView->setTemplatePathAndFilename(self::getTemplatePath('Form/PowermailAll.html'));
-        $standaloneView->assignMultiple(
+        $view = self::getView(self::getTemplatePath('Form/PowermailAll.html'));
+        $view->assignMultiple(
             [
                 'mail' => $mail,
                 'section' => $section,
@@ -109,11 +122,21 @@ class TemplateUtility
                 'type' => $type,
             ]
         );
-        return $standaloneView->render();
+        return $view->render();
     }
 
     /**
      * Parse String with Fluid View
+     *
+     * ViewFactoryInterface (the StandaloneView replacement, see
+     * powermailAll() above) only renders from a file path, not a raw
+     * string, so this case has no direct ViewFactory equivalent. Instead
+     * this drives the underlying Fluid engine directly - the same one
+     * ViewFactoryInterface uses internally - via
+     * TYPO3Fluid\Fluid\View\TemplatePaths::setTemplateSource(), which
+     * TYPO3 core did not remove (only its own CMS-specific View wrapper
+     * classes were removed). UNVERIFIED against a real TYPO3 v14
+     * installation - re-check against a live instance before relying on it.
      */
     public static function fluidParseString(string $string, array $variables = []): string
     {
@@ -125,10 +148,11 @@ class TemplateUtility
             return $string;
         }
 
-        $standaloneView = GeneralUtility::makeInstance(StandaloneView::class);
-        $standaloneView->setRequest($GLOBALS['TYPO3_REQUEST']);
-        $standaloneView->setTemplateSource($string);
-        $standaloneView->assignMultiple($variables);
-        return $standaloneView->render() ?? '';
+        $renderingContext = GeneralUtility::makeInstance(RenderingContextFactory::class)
+            ->create([], $GLOBALS['TYPO3_REQUEST'] ?? null);
+        $renderingContext->getTemplatePaths()->setTemplateSource($string);
+        $view = new TemplateView($renderingContext);
+        $view->assignMultiple($variables);
+        return $view->render() ?? '';
     }
 }

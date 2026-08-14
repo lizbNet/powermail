@@ -201,10 +201,9 @@ class SpamShieldValidator extends AbstractValidator
      */
     protected function createSpamNotificationMessage(string $path, array $multipleAssign = []): string
     {
-        $standaloneView = TemplateUtility::getDefaultStandAloneView();
-        $standaloneView->setTemplatePathAndFilename(GeneralUtility::getFileAbsFileName($path));
-        $standaloneView->assignMultiple($multipleAssign);
-        return $standaloneView->render();
+        $view = TemplateUtility::getView(GeneralUtility::getFileAbsFileName($path));
+        $view->assignMultiple($multipleAssign);
+        return $view->render();
     }
 
     /**

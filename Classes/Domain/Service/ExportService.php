@@ -146,10 +146,9 @@ class ExportService
      */
     protected function createMailBody(): string
     {
-        $standaloneView = TemplateUtility::getDefaultStandAloneView();
-        $standaloneView->setTemplatePathAndFilename(GeneralUtility::getFileAbsFileName($this->getEmailTemplate()));
-        $standaloneView->assign('export', $this);
-        return $standaloneView->render();
+        $view = TemplateUtility::getView(GeneralUtility::getFileAbsFileName($this->getEmailTemplate()));
+        $view->assign('export', $this);
+        return $view->render();
     }
 
     /**
@@ -175,17 +174,16 @@ class ExportService
      */
     protected function getFileContent(): string
     {
-        $standaloneView = TemplateUtility::getDefaultStandAloneView();
-        $standaloneView->setTemplatePathAndFilename(
+        $view = TemplateUtility::getView(
             TemplateUtility::getTemplatePath($this->getRelativeTemplatePathAndFileName())
         );
-        $standaloneView->assignMultiple(
+        $view->assignMultiple(
             [
                 'mails' => $this->getMails(),
                 'fieldUids' => $this->getFieldList(),
             ]
         );
-        return $standaloneView->render();
+        return $view->render();
     }
 
     protected function getRelativeTemplatePathAndFileName(): string

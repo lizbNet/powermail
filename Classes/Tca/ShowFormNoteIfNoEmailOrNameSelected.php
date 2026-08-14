@@ -53,9 +53,8 @@ class ShowFormNoteIfNoEmailOrNameSelected extends AbstractFormElement
     protected function getHtml(): string
     {
         if ($this->shouldNotebeShown()) {
-            $standaloneView = TemplateUtility::getDefaultStandAloneView();
-            $standaloneView->setTemplatePathAndFilename(GeneralUtility::getFileAbsFileName($this->templatePathAndFile));
-            $standaloneView->assignMultiple(
+            $view = TemplateUtility::getView(GeneralUtility::getFileAbsFileName($this->templatePathAndFile));
+            $view->assignMultiple(
                 [
                     'mutedNote' => $this->isNoteMuted(),
                     'form' => $this->data['databaseRow'],
@@ -63,7 +62,7 @@ class ShowFormNoteIfNoEmailOrNameSelected extends AbstractFormElement
                     'markerWarning' => $this->hasFormUniqueAndFilledFieldMarkers() === false,
                 ]
             );
-            return $standaloneView->render();
+            return $view->render();
         }
 
         return '';
