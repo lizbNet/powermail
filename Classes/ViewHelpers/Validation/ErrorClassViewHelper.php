@@ -6,8 +6,8 @@ namespace In2code\Powermail\ViewHelpers\Validation;
 
 use Doctrine\DBAL\DBALException;
 use In2code\Powermail\Domain\Model\Field;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Extbase\Error\Error;
-use TYPO3\CMS\Extbase\Mvc\Request;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
@@ -45,12 +45,19 @@ class ErrorClassViewHelper extends AbstractViewHelper
     }
 
     /**
-     * Shortcut for retrieving the request from the controller context
+     * Shortcut for retrieving the request from the rendering context.
      *
-     * @return Request
+     * TYPO3 v14 port: RenderingContext::getRequest()/setRequest() were
+     * removed (see Changelog Deprecation-104684-FluidRenderingContext-
+     * getRequest); the request is now exposed as a rendering context
+     * attribute instead.
      */
-    protected function getRequest()
+    protected function getRequest(): ?ServerRequestInterface
     {
-        return $this->renderingContext->getRequest();
+        if ($this->renderingContext->hasAttribute(ServerRequestInterface::class)) {
+            return $this->renderingContext->getAttribute(ServerRequestInterface::class);
+        }
+
+        return null;
     }
 }
