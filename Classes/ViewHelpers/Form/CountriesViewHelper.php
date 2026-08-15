@@ -80,21 +80,12 @@ class CountriesViewHelper extends AbstractViewHelper
     private function getLanguageService(): LanguageService
     {
         $locale = 'default';
-        $request = $this->getRequest();
+        $request = $this->getServerRequest();
         if ($request instanceof ServerRequestInterface) {
             /** @var SiteLanguage $language */
             $language = $request->getAttribute('language');
             $locale = $language->getLocale()->getName();
         }
         return GeneralUtility::makeInstance(LanguageServiceFactory::class)->create($locale);
-    }
-
-    private function getRequest(): ServerRequestInterface|null
-    {
-        $renderingContext = $this->getRenderingContext();
-        if ($renderingContext->hasAttribute(ServerRequestInterface::class)) {
-            return $renderingContext->getAttribute(ServerRequestInterface::class);
-        }
-        return null;
     }
 }

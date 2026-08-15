@@ -32,8 +32,10 @@ class ErrorClassViewHelper extends AbstractViewHelper
     {
         /** @var Field $field */
         $field = $this->arguments['field'];
-        $request = $this->getRequest();
-        assert($request instanceof ServerRequestInterface);
+        $request = $this->getServerRequest();
+        if (!$request instanceof ServerRequestInterface) {
+            return '';
+        }
         $validationResults = $request->getAttribute('extbase')->getOriginalRequestMappingResults();
         $errors = $validationResults->getFlattenedErrors();
         foreach ($errors as $error) {
@@ -47,23 +49,5 @@ class ErrorClassViewHelper extends AbstractViewHelper
         }
 
         return '';
-    }
-
-    /**
-     * Shortcut for retrieving the request from the rendering context.
-     *
-     * TYPO3 v14 port: RenderingContext::getRequest()/setRequest() were
-     * removed (see Changelog Deprecation-104684-FluidRenderingContext-
-     * getRequest); the request is now exposed as a rendering context
-     * attribute instead.
-     */
-    protected function getRequest(): ?ServerRequestInterface
-    {
-        $renderingContext = $this->getRenderingContext();
-        if ($renderingContext->hasAttribute(ServerRequestInterface::class)) {
-            return $renderingContext->getAttribute(ServerRequestInterface::class);
-        }
-
-        return null;
     }
 }
