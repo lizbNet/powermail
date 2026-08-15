@@ -3,12 +3,16 @@
 namespace In2code\Powermail\Tests\Unit\ViewHelpers\Validation;
 
 use In2code\Powermail\ViewHelpers\Validation\AbstractValidationViewHelper;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Class AbstractValidationViewHelperTest
- * @coversDefaultClass \In2code\Powermail\ViewHelpers\Validation\AbstractValidationViewHelper
  */
+#[CoversMethod(\In2code\Powermail\ViewHelpers\Validation\AbstractValidationViewHelper::class, 'isNativeValidationEnabled')]
+#[CoversMethod(\In2code\Powermail\ViewHelpers\Validation\AbstractValidationViewHelper::class, 'isClientValidationEnabled')]
 class AbstractValidationViewHelperTest extends UnitTestCase
 {
     /**
@@ -20,7 +24,7 @@ class AbstractValidationViewHelperTest extends UnitTestCase
     {
         $this->abstractValidationViewHelperMock = $this->getAccessibleMock(
             AbstractValidationViewHelper::class,
-            null
+            ['render']
         );
     }
 
@@ -84,10 +88,9 @@ class AbstractValidationViewHelperTest extends UnitTestCase
      * @param array $settings
      * @param bool $expectedNativeResult
      * @param bool $expectedClientResult
-     * @dataProvider isValidationEnabledReturnsBoolDataProvider
-     * @test
-     * @covers ::isNativeValidationEnabled
      */
+    #[Test]
+    #[DataProvider('isValidationEnabledReturnsBoolDataProvider')]
     public function isNativeValidationEnabledReturnsBool($settings, $expectedNativeResult, $expectedClientResult): void
     {
         unset($expectedClientResult);
@@ -100,10 +103,9 @@ class AbstractValidationViewHelperTest extends UnitTestCase
      * @param array $settings
      * @param bool $expectedNativeResult
      * @param bool $expectedClientResult
-     * @dataProvider isValidationEnabledReturnsBoolDataProvider
-     * @test
-     * @covers ::isClientValidationEnabled
      */
+    #[Test]
+    #[DataProvider('isValidationEnabledReturnsBoolDataProvider')]
     public function isClientValidationEnabledReturnsBool($settings, $expectedNativeResult, $expectedClientResult): void
     {
         unset($expectedNativeResult);
