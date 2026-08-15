@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace In2code\Powermail\ViewHelpers\Form;
 
+use In2code\Powermail\ViewHelpers\Traits\RenderingContextAccessorTrait;
 use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
 use TYPO3\CMS\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
@@ -13,6 +14,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
  */
 class SelectFieldViewHelper extends AbstractFormFieldViewHelper
 {
+    use RenderingContextAccessorTrait;
+
     /**
      * @var string
      */
@@ -75,7 +78,7 @@ class SelectFieldViewHelper extends AbstractFormFieldViewHelper
         $this->tag->addAttribute('name', $name);
         $options = $this->getOptions();
 
-        $viewHelperVariableContainer = $this->renderingContext->getViewHelperVariableContainer();
+        $viewHelperVariableContainer = $this->getRenderingContext()->getViewHelperVariableContainer();
 
         $this->addAdditionalIdentityPropertiesIfNeeded();
         $this->setErrorClassAttribute();

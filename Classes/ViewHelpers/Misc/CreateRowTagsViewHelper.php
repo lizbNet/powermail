@@ -3,6 +3,7 @@
 declare(strict_types=1);
 namespace In2code\Powermail\ViewHelpers\Misc;
 
+use In2code\Powermail\ViewHelpers\Traits\RenderingContextAccessorTrait;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
@@ -11,6 +12,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class CreateRowTagsViewHelper extends AbstractViewHelper
 {
+    use RenderingContextAccessorTrait;
+
     /**
      * @var bool
      */
@@ -33,7 +36,7 @@ class CreateRowTagsViewHelper extends AbstractViewHelper
         return self::renderStatic(
             $this->arguments,
             $this->buildRenderChildrenClosure(),
-            $this->renderingContext
+            $this->getRenderingContext()
         );
     }
 

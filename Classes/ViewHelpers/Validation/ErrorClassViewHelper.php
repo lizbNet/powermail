@@ -6,6 +6,7 @@ namespace In2code\Powermail\ViewHelpers\Validation;
 
 use Doctrine\DBAL\DBALException;
 use In2code\Powermail\Domain\Model\Field;
+use In2code\Powermail\ViewHelpers\Traits\RenderingContextAccessorTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Extbase\Error\Error;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
@@ -15,6 +16,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class ErrorClassViewHelper extends AbstractViewHelper
 {
+    use RenderingContextAccessorTrait;
+
     public function initializeArguments(): void
     {
         parent::initializeArguments();
@@ -29,7 +32,9 @@ class ErrorClassViewHelper extends AbstractViewHelper
     {
         /** @var Field $field */
         $field = $this->arguments['field'];
-        $validationResults = $this->getRequest()->getAttribute('extbase')->getOriginalRequestMappingResults();
+        $request = $this->getRequest();
+        assert($request instanceof ServerRequestInterface);
+        $validationResults = $request->getAttribute('extbase')->getOriginalRequestMappingResults();
         $errors = $validationResults->getFlattenedErrors();
         foreach ($errors as $error) {
             /** @var Error $singleError */
@@ -54,8 +59,9 @@ class ErrorClassViewHelper extends AbstractViewHelper
      */
     protected function getRequest(): ?ServerRequestInterface
     {
-        if ($this->renderingContext->hasAttribute(ServerRequestInterface::class)) {
-            return $this->renderingContext->getAttribute(ServerRequestInterface::class);
+        $renderingContext = $this->getRenderingContext();
+        if ($renderingContext->hasAttribute(ServerRequestInterface::class)) {
+            return $renderingContext->getAttribute(ServerRequestInterface::class);
         }
 
         return null;

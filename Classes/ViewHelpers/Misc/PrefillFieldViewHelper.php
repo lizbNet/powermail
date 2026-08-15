@@ -10,6 +10,7 @@ use In2code\Powermail\Events\PrefillFieldViewHelperEvent;
 use In2code\Powermail\Utility\ConfigurationUtility;
 use In2code\Powermail\Utility\FrontendUtility;
 use In2code\Powermail\Utility\SessionUtility;
+use In2code\Powermail\ViewHelpers\Traits\RenderingContextAccessorTrait;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
@@ -24,6 +25,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class PrefillFieldViewHelper extends AbstractViewHelper
 {
+    use RenderingContextAccessorTrait;
+
     protected ContentObjectRenderer $contentObject;
 
     /**
@@ -362,8 +365,9 @@ class PrefillFieldViewHelper extends AbstractViewHelper
 
     private function getRequest(): ServerRequestInterface | null
     {
-        if ($this->renderingContext->hasAttribute(ServerRequestInterface::class)) {
-            return $this->renderingContext->getAttribute(ServerRequestInterface::class);
+        $renderingContext = $this->getRenderingContext();
+        if ($renderingContext->hasAttribute(ServerRequestInterface::class)) {
+            return $renderingContext->getAttribute(ServerRequestInterface::class);
         }
         return null;
     }

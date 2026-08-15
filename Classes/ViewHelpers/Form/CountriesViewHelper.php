@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace In2code\Powermail\ViewHelpers\Form;
 
 use In2code\Powermail\Domain\Service\CountriesFromStaticInfoTablesService;
+use In2code\Powermail\ViewHelpers\Traits\RenderingContextAccessorTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Country\CountryProvider;
 use TYPO3\CMS\Core\Localization\LanguageService;
@@ -20,6 +21,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class CountriesViewHelper extends AbstractViewHelper
 {
+    use RenderingContextAccessorTrait;
+
     public function __construct(
         private readonly CountryProvider $countryProvider,
     ) {
@@ -44,7 +47,7 @@ class CountriesViewHelper extends AbstractViewHelper
         $countries = $this->getCountriesFromCountryAPI();
         if (
             ExtensionManagementUtility::isLoaded('static_info_tables')
-            && (string)($this->templateVariableContainer->getByPath('settings.misc.useStaticInfoTables')) === '1'
+            && (string)($this->getTemplateVariableContainer()->getByPath('settings.misc.useStaticInfoTables')) === '1'
         ) {
             $key = $this->arguments['key'];
             $value = $this->arguments['value'];
@@ -88,8 +91,9 @@ class CountriesViewHelper extends AbstractViewHelper
 
     private function getRequest(): ServerRequestInterface|null
     {
-        if ($this->renderingContext->hasAttribute(ServerRequestInterface::class)) {
-            return $this->renderingContext->getAttribute(ServerRequestInterface::class);
+        $renderingContext = $this->getRenderingContext();
+        if ($renderingContext->hasAttribute(ServerRequestInterface::class)) {
+            return $renderingContext->getAttribute(ServerRequestInterface::class);
         }
         return null;
     }

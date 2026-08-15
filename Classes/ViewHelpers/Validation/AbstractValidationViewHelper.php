@@ -6,6 +6,7 @@ namespace In2code\Powermail\ViewHelpers\Validation;
 use In2code\Powermail\Domain\Model\Field;
 use In2code\Powermail\Domain\Service\ConfigurationService;
 use In2code\Powermail\Utility\LocalizationUtility;
+use In2code\Powermail\ViewHelpers\Traits\RenderingContextAccessorTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
@@ -17,6 +18,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 abstract class AbstractValidationViewHelper extends AbstractViewHelper
 {
+    use RenderingContextAccessorTrait;
+
     protected ConfigurationManagerInterface $configurationManager;
 
     protected ?ContentObjectRenderer $contentObject = null;
@@ -109,8 +112,9 @@ abstract class AbstractValidationViewHelper extends AbstractViewHelper
 
     protected function getRequest(): ?ServerRequestInterface
     {
-        if ($this->renderingContext->hasAttribute(ServerRequestInterface::class)) {
-            return $this->renderingContext->getAttribute(ServerRequestInterface::class);
+        $renderingContext = $this->getRenderingContext();
+        if ($renderingContext->hasAttribute(ServerRequestInterface::class)) {
+            return $renderingContext->getAttribute(ServerRequestInterface::class);
         }
         return null;
     }

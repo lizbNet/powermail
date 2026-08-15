@@ -8,6 +8,7 @@ use In2code\Powermail\Domain\Repository\MailRepository;
 use In2code\Powermail\Domain\Service\ConfigurationService;
 use In2code\Powermail\Utility\ArrayUtility;
 use In2code\Powermail\Utility\TemplateUtility;
+use In2code\Powermail\ViewHelpers\Traits\RenderingContextAccessorTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\Core\Rendering\RenderingContextFactory;
@@ -19,6 +20,8 @@ use TYPO3Fluid\Fluid\View\TemplateView;
  */
 class VariablesViewHelper extends AbstractViewHelper
 {
+    use RenderingContextAccessorTrait;
+
     /**
      * @var bool
      */
@@ -61,8 +64,9 @@ class VariablesViewHelper extends AbstractViewHelper
         $type = $this->arguments['type'];
         $function = $this->arguments['function'];
         $mailRepository = GeneralUtility::makeInstance(MailRepository::class);
-        $request = $this->renderingContext->hasAttribute(ServerRequestInterface::class)
-            ? $this->renderingContext->getAttribute(ServerRequestInterface::class)
+        $currentRenderingContext = $this->getRenderingContext();
+        $request = $currentRenderingContext->hasAttribute(ServerRequestInterface::class)
+            ? $currentRenderingContext->getAttribute(ServerRequestInterface::class)
             : null;
         $renderingContext = GeneralUtility::makeInstance(RenderingContextFactory::class)->create([], $request);
         $renderingContext->getTemplatePaths()->setTemplateSource(
