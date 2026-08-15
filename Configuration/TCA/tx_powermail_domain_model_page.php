@@ -28,7 +28,6 @@ $pagesTca = [
             'ignorePageTypeRestriction' => true,
         ],
         'iconfile' => ConfigurationUtility::getIconPath(Page::TABLE_NAME . '.gif'),
-        'searchFields' => 'title',
     ],
     'interface' => [
     ],

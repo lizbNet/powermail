@@ -1,28 +1,22 @@
 <?php
 
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 
 defined('TYPO3') || die();
 
-ExtensionManagementUtility::addPiFlexFormValue(
-    '*',
-    'FILE:EXT:powermail/Configuration/FlexForms/FlexformPi1.xml',
-    'powermail_pi1'
-);
-
+// TYPO3 v14 port: ExtensionManagementUtility::addPiFlexFormValue() is
+// deprecated (see Changelog Deprecation-107047-
+// ExtensionManagementUtilityAddPiFlexFormValue) in favour of passing the
+// FlexForm path directly to registerPlugin(). This also happened to be
+// called twice (identical, redundant) before this port.
 ExtensionUtility::registerPlugin(
     'powermail',
     'Pi1',
     'LLL:EXT:powermail/Resources/Private/Language/locallang_mod.xlf:powermail_pi1.title',
     null,
-    'powermail'
-);
-
-ExtensionManagementUtility::addPiFlexFormValue(
-    '*',
-    'FILE:EXT:powermail/Configuration/FlexForms/FlexformPi1.xml',
-    'powermail_pi1'
+    'powermail',
+    '',
+    'FILE:EXT:powermail/Configuration/FlexForms/FlexformPi1.xml'
 );
 
 $GLOBALS['TCA']['tt_content']['types']['powermail_pi1']['showitem'] = '

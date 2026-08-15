@@ -27,7 +27,6 @@ $formsTca = [
             'ignorePageTypeRestriction' => true,
         ],
         'iconfile' => ConfigurationUtility::getIconPath(Form::TABLE_NAME . '.gif'),
-        'searchFields' => 'title',
     ],
     'interface' => [
     ],
