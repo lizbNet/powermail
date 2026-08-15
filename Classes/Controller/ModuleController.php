@@ -115,8 +115,7 @@ class ModuleController extends AbstractController
             'activateXlsxExport' => $this->isPhpSpreadsheetInstalled,
         ]);
 
-        $this->moduleTemplate->makeDocHeaderModuleMenu(['id' => $this->id]);
-        return $this->moduleTemplate->renderResponse('Module/List');
+        return $this->renderModuleResponse('Module/List');
     }
 
     /**
@@ -204,8 +203,7 @@ class ModuleController extends AbstractController
                 'perPage' => ($this->settings['perPage'] ?? 10),
             ]
         );
-        $this->moduleTemplate->makeDocHeaderModuleMenu(['id' => $this->id]);
-        return $this->moduleTemplate->renderResponse('Module/ReportingFormBe');
+        return $this->renderModuleResponse('Module/ReportingFormBe');
     }
 
     /**
@@ -231,8 +229,7 @@ class ModuleController extends AbstractController
                 'perPage' => ($this->settings['perPage'] ?? 10),
             ]
         );
-        $this->moduleTemplate->makeDocHeaderModuleMenu(['id' => $this->id]);
-        return $this->moduleTemplate->renderResponse('Module/ReportingMarketingBe');
+        return $this->renderModuleResponse('Module/ReportingMarketingBe');
     }
 
     /**
@@ -245,8 +242,7 @@ class ModuleController extends AbstractController
         $forms = $this->formRepository->findAllInPidAndRootline($this->id);
         $this->moduleTemplate->assign('forms', $forms);
         $this->moduleTemplate->assign('pid', $this->id);
-        $this->moduleTemplate->makeDocHeaderModuleMenu(['id' => $this->id]);
-        return $this->moduleTemplate->renderResponse('Module/OverviewBe');
+        return $this->renderModuleResponse('Module/OverviewBe');
     }
 
     public function initializeCheckBeAction(): void
@@ -259,8 +255,22 @@ class ModuleController extends AbstractController
         $this->moduleTemplate->assign('pid', $this->id);
         $this->moduleTemplate->assign('settings', $this->settings['setup'] ?? []);
         $this->sendTestEmail($this->piVars['email'] ?? null);
+        return $this->renderModuleResponse('Module/CheckBe');
+    }
+
+    /**
+     * Sets the module doc-header menu (["id" => $this->id], the one thing every
+     * moduleTemplate-rendering action needs) and renders the given template.
+     *
+     * Deliberately not called from initializeAction() anymore: Extbase's
+     * ForwardResponse (used by dispatchAction()) re-runs the whole dispatch
+     * cycle including initializeAction(), which previously caused the menu
+     * to be built twice for the forwarded-to action.
+     */
+    protected function renderModuleResponse(string $template): ResponseInterface
+    {
         $this->moduleTemplate->makeDocHeaderModuleMenu(['id' => $this->id]);
-        return $this->moduleTemplate->renderResponse('Module/CheckBe');
+        return $this->moduleTemplate->renderResponse($template);
     }
 
     protected function sendTestEmail(?string $email = null): void
