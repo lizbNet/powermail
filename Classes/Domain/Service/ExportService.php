@@ -10,8 +10,10 @@ use In2code\Powermail\Exception\DeprecatedException;
 use In2code\Powermail\Utility\BasicFileUtility;
 use In2code\Powermail\Utility\StringUtility;
 use In2code\Powermail\Utility\TemplateUtility;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
+use TYPO3\CMS\Core\Mail\MailerInterface;
 use TYPO3\CMS\Core\Mail\MailMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException;
@@ -135,8 +137,13 @@ class ExportService
             $email->attachFromPath($this->getAbsolutePathAndFileName());
         }
 
-        $email->send();
-        return $email->isSent();
+        try {
+            GeneralUtility::makeInstance(MailerInterface::class)->send($email);
+        } catch (TransportExceptionInterface) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

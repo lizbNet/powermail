@@ -15,6 +15,8 @@ use In2code\Powermail\Utility\SessionUtility;
 use In2code\Powermail\Utility\TemplateUtility;
 use In2code\Powermail\Utility\TypoScriptUtility;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use TYPO3\CMS\Core\Mail\MailerInterface;
 use TYPO3\CMS\Core\Mail\MailMessage;
 use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 use TYPO3\CMS\Core\Utility\ArrayUtility as ArrayUtilityCore;
@@ -128,9 +130,15 @@ class SendMailService
             return false;
         }
 
-        $message->send();
+        try {
+            GeneralUtility::makeInstance(MailerInterface::class)->send($message);
+            $sent = true;
+        } catch (TransportExceptionInterface) {
+            $sent = false;
+        }
+
         $this->updateMail($email);
-        return $message->isSent();
+        return $sent;
     }
 
     /**
