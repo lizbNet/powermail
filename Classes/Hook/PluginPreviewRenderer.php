@@ -41,7 +41,13 @@ class PluginPreviewRenderer extends StandardContentPreviewRenderer
         // page module always hands us a hydrated Record, whose getLanguageId()/getRawRecord() are
         // what's needed below (RecordInterface declares neither, or declares them nullable).
         $record = $item->getRecord();
-        assert($record instanceof Record);
+        if (!$record instanceof Record) {
+            throw new \UnexpectedValueException(
+                'Expected TYPO3\CMS\Core\Domain\Record from GridColumnItem::getRecord(), got '
+                    . get_debug_type($record),
+                1755289200
+            );
+        }
 
         $row = $record->toArray();
         // sys_language_uid is a system property in v14 and no longer part of toArray(),
@@ -88,24 +94,23 @@ class PluginPreviewRenderer extends StandardContentPreviewRenderer
      */
     protected function getPluginInformation(string $pluginName, array $row): string
     {
+        $localizedFormUid = $this->getLocalizedFormUid(
+            (int)$this->flexFormData['settings']['flexform']['main']['form'],
+            (int)$row['sys_language_uid']
+        );
+
         $view = TemplateUtility::getView(GeneralUtility::getFileAbsFileName($this->templatePathAndFile));
         $view->assignMultiple(
             [
                 'row' => $row,
                 'flexFormData' => $this->flexFormData,
-                'formUid' => $this->getLocalizedFormUid(
-                    (int)$this->flexFormData['settings']['flexform']['main']['form'],
-                    $row['sys_language_uid']
-                ),
+                'formUid' => $localizedFormUid,
                 'receiverEmail' => $this->getReceiverEmail(),
                 'receiverEmailDevelopmentContext' => ConfigurationUtility::getDevelopmentContextEmail(),
                 'mails' => $this->getLatestMails($row),
                 'pluginName' => $pluginName,
                 'enableMailPreview' => !ConfigurationUtility::isDisablePluginInformationMailPreviewActive(),
-                'form' => $this->getFormTitleByUid(
-                    (int)$this->flexFormData['settings']['flexform']['main']['form'],
-                    (int)$row['sys_language_uid'],
-                ),
+                'form' => $this->getFormTitleByUid($localizedFormUid),
             ]
         );
         return $view->render();
@@ -153,15 +158,13 @@ class PluginPreviewRenderer extends StandardContentPreviewRenderer
     }
 
     /**
-     * Get form title from uid
+     * Get form title from an already-localized form uid
      *
-     * @param int $uid Form uid
-     * @param int $sysLanguageUid sys_language_uid of the previewed content record
+     * @param int $localizedFormUid Form uid, already resolved via getLocalizedFormUid()
      */
-    protected function getFormTitleByUid(int $uid, int $sysLanguageUid): string
+    protected function getFormTitleByUid(int $localizedFormUid): string
     {
-        $uid = $this->getLocalizedFormUid($uid, $sysLanguageUid);
-        $row = BackendUtilityCore::getRecord(Form::TABLE_NAME, $uid, 'title', '', false);
+        $row = BackendUtilityCore::getRecord(Form::TABLE_NAME, $localizedFormUid, 'title', '', false);
         return $row['title'] ?? '';
     }
 
