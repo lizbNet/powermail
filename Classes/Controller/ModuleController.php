@@ -63,7 +63,6 @@ class ModuleController extends AbstractController
         $this->moduleTemplate = $this->moduleTemplateFactory->create($this->request);
         $this->moduleTemplate->setTitle('Powermail');
         $this->moduleTemplate->setFlashMessageQueue($this->getFlashMessageQueue());
-        $this->moduleTemplate->makeDocHeaderModuleMenu(['id' => $this->id]);
     }
 
     /**
@@ -116,6 +115,7 @@ class ModuleController extends AbstractController
             'activateXlsxExport' => $this->isPhpSpreadsheetInstalled,
         ]);
 
+        $this->moduleTemplate->makeDocHeaderModuleMenu(['id' => $this->id]);
         return $this->moduleTemplate->renderResponse('Module/List');
     }
 
@@ -204,6 +204,7 @@ class ModuleController extends AbstractController
                 'perPage' => ($this->settings['perPage'] ?? 10),
             ]
         );
+        $this->moduleTemplate->makeDocHeaderModuleMenu(['id' => $this->id]);
         return $this->moduleTemplate->renderResponse('Module/ReportingFormBe');
     }
 
@@ -230,6 +231,7 @@ class ModuleController extends AbstractController
                 'perPage' => ($this->settings['perPage'] ?? 10),
             ]
         );
+        $this->moduleTemplate->makeDocHeaderModuleMenu(['id' => $this->id]);
         return $this->moduleTemplate->renderResponse('Module/ReportingMarketingBe');
     }
 
@@ -243,6 +245,7 @@ class ModuleController extends AbstractController
         $forms = $this->formRepository->findAllInPidAndRootline($this->id);
         $this->moduleTemplate->assign('forms', $forms);
         $this->moduleTemplate->assign('pid', $this->id);
+        $this->moduleTemplate->makeDocHeaderModuleMenu(['id' => $this->id]);
         return $this->moduleTemplate->renderResponse('Module/OverviewBe');
     }
 
@@ -256,6 +259,7 @@ class ModuleController extends AbstractController
         $this->moduleTemplate->assign('pid', $this->id);
         $this->moduleTemplate->assign('settings', $this->settings['setup'] ?? []);
         $this->sendTestEmail($this->piVars['email'] ?? null);
+        $this->moduleTemplate->makeDocHeaderModuleMenu(['id' => $this->id]);
         return $this->moduleTemplate->renderResponse('Module/CheckBe');
     }
 
