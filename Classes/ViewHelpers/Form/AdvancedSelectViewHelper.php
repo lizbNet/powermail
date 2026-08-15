@@ -25,9 +25,8 @@ class AdvancedSelectViewHelper extends AbstractFormFieldViewHelper
     public function initializeArguments(): void
     {
         parent::initializeArguments();
-        $this->registerUniversalTagAttributes();
-        $this->registerTagAttribute('size', 'string', 'Size of input field');
-        $this->registerTagAttribute('disabled', 'string', 'Specifies that the input element should be disabled when the page loads');
+        $this->registerArgument('size', 'string', 'Size of input field');
+        $this->registerArgument('disabled', 'string', 'Specifies that the input element should be disabled when the page loads');
         $this->registerArgument('options', 'array', 'Associative array with internal IDs as key, and the values are displayed in the select box. Can be combined with or replaced by child f:form.select.* nodes.');
         $this->registerArgument('optionsAfterContent', 'boolean', 'If true, places auto-generated option tags after those rendered in the tag content. If false, automatic options come first.', false, false);
         $this->registerArgument('optionValueField', 'string', 'If specified, will call the appropriate getter on each object to determine the value.');
@@ -46,6 +45,12 @@ class AdvancedSelectViewHelper extends AbstractFormFieldViewHelper
     {
         if ($this->arguments['required']) {
             $this->tag->addAttribute('required', 'required');
+        }
+        if (!empty($this->arguments['size'])) {
+            $this->tag->addAttribute('size', $this->arguments['size']);
+        }
+        if (!empty($this->arguments['disabled'])) {
+            $this->tag->addAttribute('disabled', $this->arguments['disabled']);
         }
 
         $name = $this->getName();
