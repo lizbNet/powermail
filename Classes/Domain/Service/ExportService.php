@@ -8,14 +8,11 @@ use In2code\Powermail\Domain\Model\Field;
 use In2code\Powermail\Domain\Model\Mail;
 use In2code\Powermail\Exception\DeprecatedException;
 use In2code\Powermail\Utility\BasicFileUtility;
-use In2code\Powermail\Utility\ObjectUtility;
+use In2code\Powermail\Utility\MailUtility;
 use In2code\Powermail\Utility\StringUtility;
 use In2code\Powermail\Utility\TemplateUtility;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-use Symfony\Component\Mime\Exception\RfcComplianceException;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
-use TYPO3\CMS\Core\Mail\MailerInterface;
 use TYPO3\CMS\Core\Mail\MailMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException;
@@ -139,14 +136,7 @@ class ExportService
             $email->attachFromPath($this->getAbsolutePathAndFileName());
         }
 
-        try {
-            GeneralUtility::makeInstance(MailerInterface::class)->send($email);
-        } catch (TransportExceptionInterface|RfcComplianceException $exception) {
-            ObjectUtility::getLogger(self::class)->error('Mail could not be sent: ' . $exception->getMessage());
-            return false;
-        }
-
-        return true;
+        return MailUtility::send($email);
     }
 
     /**

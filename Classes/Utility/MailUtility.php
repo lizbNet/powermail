@@ -36,8 +36,27 @@ class MailUtility
         $message->setSubject($subject);
         $message->text($body);
 
+        return self::send($message);
+    }
+
+    /**
+     * Send a prepared MailMessage, logging (instead of fataling) on a transport
+     * or message-validity failure.
+     *
+     * Shared by sendPlainMail() above, SendMailService::prepareAndSend(), and
+     * ExportService::sendEmail() - all three used to duplicate this same
+     * try/catch independently.
+     *
+     * @param MailerInterface|null $mailer Pass an already-resolved mailer to
+     *        avoid a fresh container lookup on every call (relevant for
+     *        callers invoking this once per receiver in a loop); defaults to
+     *        resolving one for single-call callers like sendPlainMail() above.
+     */
+    public static function send(MailMessage $message, ?MailerInterface $mailer = null): bool
+    {
+        $mailer ??= GeneralUtility::makeInstance(MailerInterface::class);
         try {
-            GeneralUtility::makeInstance(MailerInterface::class)->send($message);
+            $mailer->send($message);
         } catch (TransportExceptionInterface|RfcComplianceException $exception) {
             ObjectUtility::getLogger(self::class)->error('Mail could not be sent: ' . $exception->getMessage());
             return false;
