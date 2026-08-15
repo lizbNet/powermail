@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace In2code\Powermail\Utility;
 
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mime\Exception\RfcComplianceException;
 use TYPO3\CMS\Core\Mail\MailerInterface;
 use TYPO3\CMS\Core\Mail\MailMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -37,7 +38,8 @@ class MailUtility
 
         try {
             GeneralUtility::makeInstance(MailerInterface::class)->send($message);
-        } catch (TransportExceptionInterface) {
+        } catch (TransportExceptionInterface|RfcComplianceException $exception) {
+            ObjectUtility::getLogger(self::class)->error('Mail could not be sent: ' . $exception->getMessage());
             return false;
         }
 

@@ -16,6 +16,7 @@ use In2code\Powermail\Utility\TemplateUtility;
 use In2code\Powermail\Utility\TypoScriptUtility;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mime\Exception\RfcComplianceException;
 use TYPO3\CMS\Core\Mail\MailerInterface;
 use TYPO3\CMS\Core\Mail\MailMessage;
 use TYPO3\CMS\Core\TypoScript\TypoScriptService;
@@ -133,7 +134,8 @@ class SendMailService
         try {
             GeneralUtility::makeInstance(MailerInterface::class)->send($message);
             $sent = true;
-        } catch (TransportExceptionInterface) {
+        } catch (TransportExceptionInterface|RfcComplianceException $exception) {
+            ObjectUtility::getLogger(self::class)->error('Mail could not be sent: ' . $exception->getMessage());
             $sent = false;
         }
 
