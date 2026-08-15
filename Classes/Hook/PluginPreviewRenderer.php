@@ -43,7 +43,11 @@ class PluginPreviewRenderer extends StandardContentPreviewRenderer
 
         $flexFormTools = GeneralUtility::makeInstance(FlexFormTools::class);
 
-        $flexforms = $flexFormTools->convertFlexFormContentToArray($row['pi_flexform']);
+        // pi_flexform is already parsed into a FlexFormFieldValues object on the hydrated
+        // Record (toArray() above), so the raw XML has to be read from the RawRecord instead.
+        $flexforms = $flexFormTools->convertFlexFormContentToArray(
+            (string)$item->getRecord()->getRawRecord()->get('pi_flexform')
+        );
 
         if (!is_array($flexforms)) {
             return 'ERROR: ' . htmlspecialchars($flexforms);
