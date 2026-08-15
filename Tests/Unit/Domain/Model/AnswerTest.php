@@ -123,7 +123,7 @@ class AnswerTest extends UnitTestCase
 
         $this->generalValidatorMock->_call('setValueType', $valueType);
 
-        $this->generalValidatorMock->_setProperty('value', $value);
+        $this->generalValidatorMock->_setProperty('value', (string)$value);
         self::assertSame($expectedResult, $this->generalValidatorMock->_call('getValue', $value));
     }
 
@@ -131,8 +131,8 @@ class AnswerTest extends UnitTestCase
     #[Test]
     public function getRawValueReturnString(mixed $value): void
     {
-        $this->generalValidatorMock->_setProperty('value', $value);
-        self::assertSame($value, $this->generalValidatorMock->_call('getRawValue'));
+        $this->generalValidatorMock->_setProperty('value', (string)$value);
+        self::assertSame((string)$value, $this->generalValidatorMock->_call('getRawValue'));
     }
 
     public static function setValueReturnVoidDataProvider(): array
@@ -231,6 +231,6 @@ class AnswerTest extends UnitTestCase
         }
 
         $this->generalValidatorMock->_call('setValue', $value);
-        self::assertSame($expectedResult, $this->generalValidatorMock->_getProperty('value'));
+        self::assertSame((string)$expectedResult, $this->generalValidatorMock->_getProperty('value'));
     }
 }

@@ -27,7 +27,10 @@ class Answer extends AbstractEntity
 
     const VALUE_TYPE_PASSWORD = 4;
 
-    protected string|int $value = '';
+    /**
+     * @var string
+     */
+    protected string $value = '';
 
     /**
      * Use when password is hashed so that the originally entered value is available in the finishers
@@ -101,7 +104,7 @@ class Answer extends AbstractEntity
     {
         $value = $this->convertToJson($value);
         $value = $this->convertToTimestamp($value);
-        $this->value = $value;
+        $this->value = (string)$value;
         return $this;
     }
 
@@ -139,12 +142,10 @@ class Answer extends AbstractEntity
     /**
      * Returns raw value - could be
      *        - Same as getValue()
-     *        - Timestamp (Date fields) instead of human readable date
+     *        - Timestamp (Date fields) instead of human readable date, as a numeric string
      *        - JSON string for multiple fields instead of array
-     *
-     * @return string|int
      */
-    public function getRawValue()
+    public function getRawValue(): string
     {
         return $this->value;
     }
