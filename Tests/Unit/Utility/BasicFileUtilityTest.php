@@ -29,8 +29,15 @@ class BasicFileUtilityTest extends UnitTestCase
     #[Test]
     public function getFilesFromRelativePathReturnsString(): void
     {
-        $result = BasicFileUtility::getFilesFromRelativePath('typo3/');
-        self::assertSame(['index.php', 'install.php'], $result);
+        $testpath = TestingHelper::getWebRoot() . 'fileadmin/getFilesFromRelativePathReturnsString/';
+        BasicFileUtility::createFolderIfNotExists($testpath);
+        touch($testpath . 'aaa.txt');
+        touch($testpath . 'bbb.txt');
+
+        $result = BasicFileUtility::getFilesFromRelativePath('fileadmin/getFilesFromRelativePathReturnsString/');
+        GeneralUtility::rmdir($testpath, true);
+
+        self::assertSame(['aaa.txt', 'bbb.txt'], $result);
     }
 
     #[Test]

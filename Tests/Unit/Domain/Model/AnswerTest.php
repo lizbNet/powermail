@@ -129,7 +129,7 @@ class AnswerTest extends UnitTestCase
 
     #[DataProvider('getValueReturnVoidDataProvider')]
     #[Test]
-    public function getRawValueReturnString(mixed $value): void
+    public function getRawValueReturnString(mixed $value, mixed $expectedResult = null, $valueType = 0, $datepickerSettings = null): void
     {
         $this->generalValidatorMock->_setProperty('value', (string)$value);
         self::assertSame((string)$value, $this->generalValidatorMock->_call('getRawValue'));
