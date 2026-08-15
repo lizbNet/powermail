@@ -10,7 +10,6 @@ use In2code\Powermail\Utility\ArrayUtility;
 use In2code\Powermail\Utility\TemplateUtility;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\Core\Rendering\RenderingContext;
 use TYPO3\CMS\Fluid\Core\Rendering\RenderingContextFactory;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\View\TemplateView;
@@ -34,11 +33,6 @@ class VariablesViewHelper extends AbstractViewHelper
      * Configuration
      */
     protected array $settings = [];
-
-    /**
-     * @var RenderingContext
-     */
-    protected $renderingContext;
 
     public function initializeArguments(): void
     {
