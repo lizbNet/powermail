@@ -116,7 +116,6 @@ class ModuleController extends AbstractController
             'activateXlsxExport' => $this->isPhpSpreadsheetInstalled,
         ]);
 
-        $this->moduleTemplate->makeDocHeaderModuleMenu(['id' => $this->id]);
         return $this->moduleTemplate->renderResponse('Module/List');
     }
 
@@ -244,7 +243,6 @@ class ModuleController extends AbstractController
         $forms = $this->formRepository->findAllInPidAndRootline($this->id);
         $this->moduleTemplate->assign('forms', $forms);
         $this->moduleTemplate->assign('pid', $this->id);
-        $this->moduleTemplate->makeDocHeaderModuleMenu(['id' => $this->id]);
         return $this->moduleTemplate->renderResponse('Module/OverviewBe');
     }
 
