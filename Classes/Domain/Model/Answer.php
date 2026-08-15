@@ -166,7 +166,7 @@ class Answer extends AbstractEntity
                 $field = $this->getField();
                 $this->setValueType($field->dataTypeFromFieldType($field->getType()));
             } else {
-                $this->setValue(0);
+                $this->setValueType(0);
             }
         }
 
