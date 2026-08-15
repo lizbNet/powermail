@@ -2,7 +2,6 @@ services:
   web:
     environment:
       - TYPO3_CONTEXT=Development/DDEV
-      - TYPO3_PATH_APP=/var/www/html/.build
       - MYSQL_DATABASE=db
       - MYSQL_PASSWORD=db
       - MYSQL_USER=db

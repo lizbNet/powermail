@@ -1,4 +1,7 @@
-base: 'https://powermail-v13.ddev.site/'
+base: 'https://powermail-v14.ddev.site/'
+dependencies:
+  - typo3/fluid-styled-content
+  - in2code/powermail-main
 languages:
   -
     title: deutsch
