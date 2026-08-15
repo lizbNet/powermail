@@ -15,7 +15,7 @@ use TYPO3\CMS\Backend\Utility\BackendUtility as BackendUtilityCore;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\GridColumnItem;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
-use TYPO3\CMS\Core\Service\FlexFormService;
+use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
@@ -41,9 +41,9 @@ class PluginPreviewRenderer extends StandardContentPreviewRenderer
     {
         $row = $item->getRecord();
 
-        $flexFormService = GeneralUtility::makeInstance(FlexFormService::class);
+        $flexFormTools = GeneralUtility::makeInstance(FlexFormTools::class);
 
-        $flexforms = $flexFormService->convertFlexFormContentToArray($row['pi_flexform']);
+        $flexforms = $flexFormTools->convertFlexFormContentToArray($row['pi_flexform']);
 
         if (!is_array($flexforms)) {
             return 'ERROR: ' . htmlspecialchars($flexforms);

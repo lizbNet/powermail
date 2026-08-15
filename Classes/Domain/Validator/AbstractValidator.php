@@ -8,7 +8,7 @@ use In2code\Powermail\Domain\Model\Field;
 use In2code\Powermail\Domain\Service\ConfigurationService;
 use In2code\Powermail\Utility\FrontendUtility;
 use Psr\Http\Message\ServerRequestInterface;
-use TYPO3\CMS\Core\Service\FlexFormService;
+use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Validation\Error;
 use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator as ExtbaseAbstractValidator;
@@ -88,9 +88,9 @@ abstract class AbstractValidator extends ExtbaseAbstractValidator implements Val
     public function initFlexform(): void
     {
         if ($this->request instanceof ServerRequestInterface) {
-            /** @var FlexFormService $flexFormService */
-            $flexFormService = GeneralUtility::makeInstance(FlexFormService::class);
-            $this->flexForm = $flexFormService->convertFlexFormContentToArray(
+            /** @var FlexFormTools $flexFormTools */
+            $flexFormTools = GeneralUtility::makeInstance(FlexFormTools::class);
+            $this->flexForm = $flexFormTools->convertFlexFormContentToArray(
                 // added check for the array key for `pi_flexform` due to https://github.com/in2code-de/powermail/issues/1020
                 // please be aware, if you include powermail via TypoScript, you are on your own to set all necessary values
                 $this->request->getAttribute('currentContentObject')->data['pi_flexform'] ?? ''

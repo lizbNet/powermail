@@ -3,7 +3,7 @@
 declare(strict_types=1);
 namespace In2code\Powermail\Domain\Service;
 
-use TYPO3\CMS\Core\Service\FlexFormService;
+use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
@@ -77,8 +77,8 @@ class RedirectUriService
      */
     protected function getFlexFormArray(): ?array
     {
-        $flexFormService = GeneralUtility::makeInstance(FlexFormService::class);
-        return $flexFormService->convertFlexFormContentToArray($this->contentObject->data['pi_flexform']??'');
+        $flexFormTools = GeneralUtility::makeInstance(FlexFormTools::class);
+        return $flexFormTools->convertFlexFormContentToArray($this->contentObject->data['pi_flexform']??'');
     }
 
     /**
