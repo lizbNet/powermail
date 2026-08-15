@@ -53,7 +53,7 @@ class SelectFieldViewHelper extends AbstractFormFieldViewHelper
      * @return string rendered tag.
      * @api
      */
-    public function render()
+    public function render(): string
     {
         $this->originalOptions = $this->arguments['options'];
         $this->setOptions();

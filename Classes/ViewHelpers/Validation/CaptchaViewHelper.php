@@ -37,7 +37,7 @@ class CaptchaViewHelper extends AbstractTagBasedViewHelper
      *
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         try {
             return $this->getImage();
