@@ -27,10 +27,7 @@ class Answer extends AbstractEntity
 
     const VALUE_TYPE_PASSWORD = 4;
 
-    /**
-     * @var mixed
-     */
-    protected $value = '';
+    protected string|int $value = '';
 
     /**
      * Use when password is hashed so that the originally entered value is available in the finishers
@@ -80,7 +77,7 @@ class Answer extends AbstractEntity
         // if serialized, change to array
         // only if type multivalue or upload
         if (ArrayUtility::isJsonArray((string)$this->value) && ($this->getValueType() === self::VALUE_TYPE_ARRAY || $this->getValueType() === self::VALUE_TYPE_UPLOAD)) {
-            $value = json_decode($value, true);
+            $value = json_decode((string)$value, true);
         }
 
         if ($this->isTypeDateForTimestamp($value)) {
