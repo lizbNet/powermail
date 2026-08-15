@@ -61,6 +61,12 @@ parameters:
 			path: ../../Classes/Controller/AbstractController.php
 
 		-
+			message: '#^Parameter \#1 \.\.\.\$propertyNames of method TYPO3\\CMS\\Extbase\\Property\\PropertyMappingConfigurationInterface\:\:allowProperties\(\) expects non\-empty\-string, int\<0, max\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../../Classes/Controller/AbstractController.php
+
+		-
 			message: '#^PHPDoc tag @throws with type In2code\\Powermail\\Exception\\DeprecatedException\|TYPO3\\CMS\\Core\\Configuration\\Exception\\ExtensionConfigurationExtensionNotConfiguredException\|TYPO3\\CMS\\Core\\Configuration\\Exception\\ExtensionConfigurationPathDoesNotExistException\|TYPO3\\CMS\\Extbase\\Mvc\\Exception\\NoSuchArgumentException\|TYPO3\\CMS\\Extbase\\Object\\Exception\|TYPO3\\CMS\\Extbase\\Persistence\\Exception\\InvalidQueryException is not subtype of Throwable$#'
 			identifier: throws.notThrowable
 			count: 1
@@ -2389,6 +2395,12 @@ parameters:
 			path: ../../Classes/Domain/Validator/SpamShield/RateLimitMethod.php
 
 		-
+			message: '#^Strict comparison using \=\=\= between DateInterval and false will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: ../../Classes/Domain/Validator/SpamShield/RateLimitMethod.php
+
+		-
 			message: '#^Cannot call method getUid\(\) on In2code\\Powermail\\Domain\\Model\\Form\|TYPO3\\CMS\\Extbase\\Persistence\\Generic\\LazyLoadingProxy\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -3115,18 +3127,6 @@ parameters:
 			path: ../../Classes/Hook/PluginPreviewRenderer.php
 
 		-
-			message: '#^Property In2code\\Powermail\\Hook\\PluginPreviewRenderer\:\:\$row has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: ../../Classes/Hook/PluginPreviewRenderer.php
-
-		-
-			message: '#^Property In2code\\Powermail\\Hook\\PluginPreviewRenderer\:\:\$rows type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: ../../Classes/Hook/PluginPreviewRenderer.php
-
-		-
 			message: '#^If condition is always true\.$#'
 			identifier: if.alwaysTrue
 			count: 1
@@ -3383,66 +3383,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: ../../Classes/Update/PowermailPermissionSubmoduleUpdater.php
-
-		-
-			message: '#^Method In2code\\Powermail\\Update\\PowermailPermissionUpdater\:\:getMigrationRecords\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: ../../Classes/Update/PowermailPermissionUpdater.php
-
-		-
-			message: '#^Method In2code\\Powermail\\Update\\PowermailPermissionUpdater\:\:updateRow\(\) has parameter \$row with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: ../../Classes/Update/PowermailPermissionUpdater.php
-
-		-
-			message: '#^Constant LF not found\.$#'
-			identifier: constant.notFound
-			count: 1
-			path: ../../Classes/Update/PowermailPluginUpdater.php
-
-		-
-			message: '#^Method In2code\\Powermail\\Update\\PowermailPluginUpdater\:\:array2xml\(\) has parameter \$input with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: ../../Classes/Update/PowermailPluginUpdater.php
-
-		-
-			message: '#^Method In2code\\Powermail\\Update\\PowermailPluginUpdater\:\:getAllowedSettingsFromFlexForm\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: ../../Classes/Update/PowermailPluginUpdater.php
-
-		-
-			message: '#^Method In2code\\Powermail\\Update\\PowermailPluginUpdater\:\:getMigrationRecords\(\) has parameter \$list_type with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: ../../Classes/Update/PowermailPluginUpdater.php
-
-		-
-			message: '#^Method In2code\\Powermail\\Update\\PowermailPluginUpdater\:\:getMigrationRecords\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: ../../Classes/Update/PowermailPluginUpdater.php
-
-		-
-			message: '#^Offset ''data'' might not exist on array\|string\.$#'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: ../../Classes/Update/PowermailPluginUpdater.php
-
-		-
-			message: '#^Offset ''sheets'' might not exist on array\|string\.$#'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: ../../Classes/Update/PowermailPluginUpdater.php
-
-		-
-			message: '#^Parameter \#1 \$string of static method TYPO3\\CMS\\Core\\Utility\\GeneralUtility\:\:xml2array\(\) expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: ../../Classes/Update/PowermailPluginUpdater.php
 
 		-
 			message: '#^PHPDoc tag @throws with type Doctrine\\DBAL\\DBALException is not subtype of Throwable$#'
@@ -3817,12 +3757,6 @@ parameters:
 			path: ../../Classes/Utility/ObjectUtility.php
 
 		-
-			message: '#^PHPDoc tag @SuppressWarnings has invalid value \(\(PHPMD\.Superglobals\)\)\: Unexpected token "\.Superglobals\)", expected ''\)'' at offset 78 on line 3$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: ../../Classes/Utility/ObjectUtility.php
-
-		-
 			message: '#^Method In2code\\Powermail\\Utility\\ReportingUtility\:\:cutArrayByKeyLimitAndAddTotalValues\(\) has parameter \$reportingArray with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -4111,18 +4045,6 @@ parameters:
 			path: ../../Classes/ViewHelpers/Condition/IsThereAMailWithStartingLetterViewHelper.php
 
 		-
-			message: '#^Result of && is always false\.$#'
-			identifier: booleanAnd.alwaysFalse
-			count: 1
-			path: ../../Classes/ViewHelpers/Condition/OrViewHelper.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between 0\|0\.0\|''''\|''0''\|array\{\}\|false\|null and mixed will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: ../../Classes/ViewHelpers/Condition/OrViewHelper.php
-
-		-
 			message: '#^Cannot cast object to string\.$#'
 			identifier: cast.string
 			count: 1
@@ -4265,12 +4187,6 @@ parameters:
 			identifier: return.type
 			count: 1
 			path: ../../Classes/ViewHelpers/Getter/GetPiVarAnswerFieldViewHelper.php
-
-		-
-			message: '#^Method In2code\\Powermail\\ViewHelpers\\Misc\\CheckForTypoScriptViewHelper\:\:renderStatic\(\) has parameter \$arguments with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: ../../Classes/ViewHelpers/Misc/CheckForTypoScriptViewHelper.php
 
 		-
 			message: '#^Method In2code\\Powermail\\ViewHelpers\\Misc\\CreateRowTagsViewHelper\:\:getAttributes\(\) has parameter \$arguments with no value type specified in iterable type array\.$#'
@@ -4703,12 +4619,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: ../../Classes/ViewHelpers/Validation/EnableJavascriptValidationAndAjaxViewHelper.php
-
-		-
-			message: '#^Call to an undefined method TYPO3Fluid\\Fluid\\Core\\Rendering\\RenderingContextInterface\:\:getRequest\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: ../../Classes/ViewHelpers/Validation/ErrorClassViewHelper.php
 
 		-
 			message: '#^PHPDoc tag @throws with type Doctrine\\DBAL\\DBALException is not subtype of Throwable$#'
