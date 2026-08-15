@@ -15,7 +15,7 @@
 
 namespace In2code\Powermail\Domain\Model;
 
-use TYPO3\CMS\Extbase\Annotation as Extbase;
+use TYPO3\CMS\Extbase\Attribute as Extbase;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
 class BackendUser extends AbstractEntity

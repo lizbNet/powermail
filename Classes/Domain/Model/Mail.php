@@ -44,7 +44,7 @@ class Mail extends AbstractEntity
     /**
      * @var \In2code\Powermail\Domain\Model\User
      */
-    #[\TYPO3\CMS\Extbase\Annotation\ORM\Lazy]
+    #[\TYPO3\CMS\Extbase\Attribute\ORM\Lazy]
     protected $feuser;
 
     /**
@@ -75,7 +75,7 @@ class Mail extends AbstractEntity
     /**
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\In2code\Powermail\Domain\Model\Answer>
      */
-    #[\TYPO3\CMS\Extbase\Annotation\ORM\Lazy]
+    #[\TYPO3\CMS\Extbase\Attribute\ORM\Lazy]
     protected $answers;
 
     /**
