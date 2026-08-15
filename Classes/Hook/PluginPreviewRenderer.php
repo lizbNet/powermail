@@ -40,6 +40,9 @@ class PluginPreviewRenderer extends StandardContentPreviewRenderer
     public function renderPageModulePreviewContent(GridColumnItem $item): string
     {
         $row = $item->getRecord()->toArray();
+        // sys_language_uid is a system property in v14 and no longer part of toArray(),
+        // so it has to be added back explicitly for the downstream $row['sys_language_uid'] usages.
+        $row['sys_language_uid'] = $item->getRecord()->getLanguageId() ?? 0;
 
         $flexFormTools = GeneralUtility::makeInstance(FlexFormTools::class);
 
