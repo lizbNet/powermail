@@ -3,7 +3,7 @@
 declare(strict_types=1);
 namespace In2code\Powermail\Tca;
 
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DBALException;
 use In2code\Powermail\Domain\Model\Form;
 use In2code\Powermail\Domain\Repository\FormRepository;
 use In2code\Powermail\Utility\ConfigurationUtility;

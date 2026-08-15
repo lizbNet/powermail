@@ -3,7 +3,6 @@
 declare(strict_types=1);
 namespace In2code\Powermail\Tca;
 
-use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Exception;
 use In2code\Powermail\Database\QueryGenerator;
 use In2code\Powermail\Domain\Model\Form;
@@ -57,7 +56,7 @@ class FormSelectorUserFunc
      *
      *      Commaseparated values are allowed. If no TSConfig set, all forms will be shown
      *
-     * @throws DBALException
+     * @throws Exception
      * @noinspection PhpUnused
      */
     public function getForms(array &$params): void

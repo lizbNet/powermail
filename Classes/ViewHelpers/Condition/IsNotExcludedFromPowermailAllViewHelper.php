@@ -3,7 +3,7 @@
 declare(strict_types=1);
 namespace In2code\Powermail\ViewHelpers\Condition;
 
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DBALException;
 use In2code\Powermail\Domain\Model\Answer;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace In2code\Powermail\Domain\Repository;
 
+use Doctrine\DBAL\Exception as DBALException;
 use In2code\Powermail\Domain\Model\Answer;
 use In2code\Powermail\Domain\Model\Form;
 use In2code\Powermail\Domain\Model\Mail;

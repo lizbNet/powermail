@@ -3,7 +3,7 @@
 declare(strict_types=1);
 namespace In2code\Powermail\Domain\Service;
 
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Exception\DriverException;
 use In2code\Powermail\Exception\DatabaseFieldMissingException;
 use In2code\Powermail\Exception\PropertiesMissingException;
