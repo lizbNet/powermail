@@ -109,7 +109,7 @@ class FormController extends AbstractController
                 'form' => $form,
                 'ttContentData' => $this->contentObject->data,
                 'messageClass' => $this->messageClass,
-                'action' => ($this->settings['main']['confirmation'] ? 'confirmation' : 'create'),
+                'action' => (($this->settings['main']['confirmation'] ?? false) ? 'confirmation' : 'create'),
             ]
         );
 
