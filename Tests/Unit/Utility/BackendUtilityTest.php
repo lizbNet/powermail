@@ -5,13 +5,20 @@ namespace In2code\Powermail\Tests\Unit\Utility;
 use In2code\Powermail\Exception\DeprecatedException;
 use In2code\Powermail\Tests\Helper\TestingHelper;
 use In2code\Powermail\Utility\BackendUtility;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Class BackendUtilityTest
- * @coversDefaultClass \In2code\Powermail\Utility\BackendUtility
  */
+#[CoversMethod(BackendUtility::class, 'isBackendAdmin')]
+#[CoversMethod(BackendUtility::class, 'getBackendUserAuthentication')]
+#[CoversMethod(BackendUtility::class, 'getPropertyFromBackendUser')]
+#[CoversMethod(BackendUtility::class, 'getPagesTSconfig')]
+#[CoversMethod(BackendUtility::class, 'filterPagesForAccess')]
 class BackendUtilityTest extends UnitTestCase
 {
     protected bool $resetSingletonInstances = true;
@@ -40,12 +47,10 @@ class BackendUtilityTest extends UnitTestCase
     /**
      * @param string $value
      * @param bool $expectedResult
-     * @dataProvider isBackendAdminReturnsBoolDataProvider
      * @SuppressWarnings(PHPMD.Superglobals)
-     * @test
-     * @covers ::isBackendAdmin
-     * @covers ::getBackendUserAuthentication
      */
+    #[DataProvider('isBackendAdminReturnsBoolDataProvider')]
+    #[Test]
     public function isBackendAdminReturnsBool($value, $expectedResult): void
     {
         TestingHelper::setDefaultConstants();
@@ -82,12 +87,10 @@ class BackendUtilityTest extends UnitTestCase
 
     /**
      * @param string $property
-     * @dataProvider getPropertyFromBackendUserReturnsStringDataProvider
      * @SuppressWarnings(PHPMD.Superglobals)
-     * @test
-     * @covers ::getPropertyFromBackendUser
-     * @covers ::getBackendUserAuthentication
      */
+    #[DataProvider('getPropertyFromBackendUserReturnsStringDataProvider')]
+    #[Test]
     public function getPropertyFromBackendUserReturnsString($property, mixed $value): void
     {
         TestingHelper::setDefaultConstants();
@@ -165,10 +168,9 @@ class BackendUtilityTest extends UnitTestCase
     }
 
     /**
-     * @test
-     * @covers ::getPagesTSconfig
      * @throws DeprecatedException
      */
+    #[Test]
     public function getPagesTSconfigReturnsString(): void
     {
         self::assertEmpty(BackendUtility::getPagesTSconfig(1));
@@ -176,9 +178,8 @@ class BackendUtilityTest extends UnitTestCase
 
     /**
      * @SuppressWarnings(PHPMD.Superglobals)
-     * @test
-     * @covers ::filterPagesForAccess
      */
+    #[Test]
     public function filterPagesForAccessReturnsArray(): void
     {
         TestingHelper::setDefaultConstants();

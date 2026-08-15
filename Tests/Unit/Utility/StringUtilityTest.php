@@ -3,12 +3,26 @@
 namespace In2code\Powermail\Tests\Unit\Utility;
 
 use In2code\Powermail\Utility\StringUtility;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Class StringUtilityTest
- * @coversDefaultClass \In2code\Powermail\Utility\StringUtility
  */
+#[CoversMethod(StringUtility::class, 'isNotEmpty')]
+#[CoversMethod(StringUtility::class, 'getRandomString')]
+#[CoversMethod(StringUtility::class, 'conditionalVariable')]
+#[CoversMethod(StringUtility::class, 'endsWith')]
+#[CoversMethod(StringUtility::class, 'startsWith')]
+#[CoversMethod(StringUtility::class, 'removeLastDot')]
+#[CoversMethod(StringUtility::class, 'br2nl')]
+#[CoversMethod(StringUtility::class, 'getStringLength')]
+#[CoversMethod(StringUtility::class, 'cleanString')]
+#[CoversMethod(StringUtility::class, 'integerList')]
+#[CoversMethod(StringUtility::class, 'getSrcFromImageTag')]
+#[CoversMethod(StringUtility::class, 'addTrailingSlash')]
 class StringUtilityTest extends UnitTestCase
 {
     /**
@@ -87,10 +101,9 @@ class StringUtilityTest extends UnitTestCase
     /**
      * @param string $value
      * @param array $expectedResult
-     * @dataProvider isNotEmptyReturnsBoolDataProvider
-     * @test
-     * @covers ::isNotEmpty
      */
+    #[DataProvider('isNotEmptyReturnsBoolDataProvider')]
+    #[Test]
     public function isNotEmptyReturnsBool($value, $expectedResult): void
     {
         self::assertSame($expectedResult, StringUtility::isNotEmpty($value));
@@ -126,10 +139,9 @@ class StringUtilityTest extends UnitTestCase
      *
      * @param int $length
      * @param bool $uppercase
-     * @dataProvider getRandomStringAlwaysReturnsStringsOfGivenLengthDataProvider
-     * @test
-     * @covers ::getRandomString
      */
+    #[DataProvider('getRandomStringAlwaysReturnsStringsOfGivenLengthDataProvider')]
+    #[Test]
     public function getRandomStringAlwaysReturnsStringsOfGivenLength($length, $uppercase): void
     {
         for ($i = 0; $i < 100; $i++) {
@@ -178,11 +190,8 @@ class StringUtilityTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider conditionalVariableReturnsMixedDataProvider
-     * @test
-     * @covers ::conditionalVariable
-     */
+    #[DataProvider('conditionalVariableReturnsMixedDataProvider')]
+    #[Test]
     public function conditionalVariableReturnsMixed(mixed $variable, mixed $fallback, mixed $expectedResult): void
     {
         self::assertSame($expectedResult, StringUtility::conditionalVariable($variable, $fallback));
@@ -236,10 +245,9 @@ class StringUtilityTest extends UnitTestCase
      * @param string $haystack
      * @param string $needle
      * @param bool $expectedResult
-     * @dataProvider endsWithReturnsStringDataProvider
-     * @test
-     * @covers ::endsWith
      */
+    #[DataProvider('endsWithReturnsStringDataProvider')]
+    #[Test]
     public function endsWithReturnsString($haystack, $needle, $expectedResult): void
     {
         self::assertSame($expectedResult, StringUtility::endsWith($haystack, $needle));
@@ -283,10 +291,9 @@ class StringUtilityTest extends UnitTestCase
      * @param string $haystack
      * @param string $needle
      * @param bool $expectedResult
-     * @dataProvider startsWithReturnsStringDataProvider
-     * @test
-     * @covers ::startsWith
      */
+    #[DataProvider('startsWithReturnsStringDataProvider')]
+    #[Test]
     public function startsWithReturnsString($haystack, $needle, $expectedResult): void
     {
         self::assertSame($expectedResult, StringUtility::startsWith($haystack, $needle));
@@ -324,10 +331,9 @@ class StringUtilityTest extends UnitTestCase
     /**
      * @param string $string
      * @param string $expectedResult
-     * @dataProvider removeLastDotReturnsStringDataProvider
-     * @test
-     * @covers ::removeLastDot
      */
+    #[DataProvider('removeLastDotReturnsStringDataProvider')]
+    #[Test]
     public function removeLastDotReturnsString($string, $expectedResult): void
     {
         self::assertSame($expectedResult, StringUtility::removeLastDot($string));
@@ -357,10 +363,9 @@ class StringUtilityTest extends UnitTestCase
     /**
      * @param string $content
      * @param string $expectedResult
-     * @dataProvider br2nlReturnStringDataProvider
-     * @test
-     * @covers ::br2nl
      */
+    #[DataProvider('br2nlReturnStringDataProvider')]
+    #[Test]
     public function br2nlReturnString($content, $expectedResult): void
     {
         self::assertSame($expectedResult, StringUtility::br2nl($content));
@@ -394,28 +399,21 @@ class StringUtilityTest extends UnitTestCase
     /**
      * @param string $string
      * @param int $expectedResult
-     * @dataProvider getStringLengthReturnIntDataProvider
-     * @test
-     * @covers ::getStringLength
      */
+    #[DataProvider('getStringLengthReturnIntDataProvider')]
+    #[Test]
     public function getStringLengthReturnInt($string, $expectedResult): void
     {
         self::assertSame($expectedResult, StringUtility::getStringLength($string));
     }
 
-    /**
-     * @test
-     * @covers ::cleanString
-     */
+    #[Test]
     public function cleanStringReturnsString(): void
     {
         self::assertSame('iu.asd__________-3test', StringUtility::cleanString('iu.asd?ßü**^%_-3test'));
     }
 
-    /**
-     * @test
-     * @covers ::integerList
-     */
+    #[Test]
     public function integerListReturnsString(): void
     {
         self::assertSame('5,8,0', StringUtility::integerList('5,8,a4'));
@@ -423,10 +421,7 @@ class StringUtilityTest extends UnitTestCase
         self::assertSame('5,8,4', StringUtility::integerList('5,8,4'));
     }
 
-    /**
-     * @test
-     * @covers ::getSrcFromImageTag
-     */
+    #[Test]
     public function getSrcFromImageTagReturnsString(): void
     {
         $tag = '<img id="ab3src" src="test.jpg" class="src=" data-action="test" />';
@@ -462,9 +457,8 @@ class StringUtilityTest extends UnitTestCase
     /**
      * @param string $string
      * @param string $expectedResult
-     * @dataProvider addTrailingSlashReturnStringDataProvider
-     * @covers ::addTrailingSlash
      */
+    #[DataProvider('addTrailingSlashReturnStringDataProvider')]
     public function testAddTrailingSlashReturnString($string, $expectedResult): void
     {
         self::assertSame($expectedResult, StringUtility::addTrailingSlash($string));

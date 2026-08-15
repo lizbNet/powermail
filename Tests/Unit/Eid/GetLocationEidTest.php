@@ -4,13 +4,16 @@ namespace In2code\Powermail\Tests\Unit\Eid;
 
 use In2code\Powermail\Eid\GetLocationEid;
 use In2code\Powermail\Tests\Helper\TestingHelper;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\DataProvider;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Class GetLocationEidTest
- * @coversDefaultClass \In2code\Powermail\Eid\GetLocationEid
  */
+#[CoversMethod(\In2code\Powermail\Eid\GetLocationEid::class, 'main')]
+#[CoversMethod(\In2code\Powermail\Eid\GetLocationEid::class, 'getAddressFromGeo')]
 class GetLocationEidTest extends UnitTestCase
 {
     public function setUp(): void
@@ -42,10 +45,8 @@ class GetLocationEidTest extends UnitTestCase
 
     /**
      * @SuppressWarnings(PHPMD.Superglobals)
-     * @dataProvider mainDataProvider
-     * @covers ::main
-     * @covers ::getAddressFromGeo
      */
+    #[DataProvider('mainDataProvider')]
     public function testMain(float $latitude, float $longitude, string $expectedResult): void
     {
         $request = new ServerRequest();

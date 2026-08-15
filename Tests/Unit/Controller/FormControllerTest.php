@@ -12,6 +12,9 @@ use In2code\Powermail\Domain\Repository\MailRepository;
 use In2code\Powermail\Domain\Service\UploadService;
 use In2code\Powermail\Tests\Helper\TestingHelper;
 use PHPUnit\Exception;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
@@ -28,8 +31,15 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Class FormControllerTest
- * @coversDefaultClass \In2code\Powermail\Controller\FormController
  */
+#[CoversMethod(\In2code\Powermail\Controller\FormController::class, 'forwardIfFormParamsDoNotMatch')]
+#[CoversMethod(\In2code\Powermail\Controller\FormController::class, 'forwardIfMailParamIsEmpty')]
+#[CoversMethod(\In2code\Powermail\Controller\FormController::class, 'forwardIfFormParamsDoNotMatchForOptinConfirm')]
+#[CoversMethod(\In2code\Powermail\Controller\FormController::class, 'isMailPersistActive')]
+#[CoversMethod(\In2code\Powermail\Controller\FormController::class, 'isNoOptin')]
+#[CoversMethod(\In2code\Powermail\Controller\FormController::class, 'isPersistActive')]
+#[CoversMethod(\In2code\Powermail\Controller\FormController::class, 'isSenderMailEnabled')]
+#[CoversMethod(\In2code\Powermail\Controller\FormController::class, 'isReceiverMailEnabled')]
 class FormControllerTest extends UnitTestCase
 {
     /**
@@ -87,11 +97,8 @@ class FormControllerTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider forwardIfFormParamsDoNotMatchThrowsExceptionDataProvider
-     * @test
-     * @covers ::forwardIfFormParamsDoNotMatch
-     */
+    #[Test]
+    #[DataProvider('forwardIfFormParamsDoNotMatchThrowsExceptionDataProvider')]
     public function forwardIfFormParamsDoNotMatchThrowsException(array $arguments, array $settings, bool $forward): void
     {
         $this->setDefaultControllerProperties($arguments);
@@ -147,11 +154,8 @@ class FormControllerTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider forwardIfFormParamsDoNotMatchThrowsNoExceptionDataProvider
-     * @test
-     * @covers ::forwardIfFormParamsDoNotMatch
-     */
+    #[Test]
+    #[DataProvider('forwardIfFormParamsDoNotMatchThrowsNoExceptionDataProvider')]
     public function forwardIfFormParamsDoNotMatchThrowsNoException(array $arguments, array $settings, bool $forward): void
     {
         $this->setDefaultControllerProperties($arguments);
@@ -181,12 +185,8 @@ class FormControllerTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider forwardIfMailParamEmptyDataProvider
-     * @test
-     * @covers ::forwardIfMailParamIsEmpty
-     */
+    #[Test]
+    #[DataProvider('forwardIfMailParamEmptyDataProvider')]
     public function forwardIfMailParamEmpty(array $arguments, bool $forward): void
     {
         TestingHelper::setDefaultConstants();
@@ -211,11 +211,8 @@ class FormControllerTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider forwardIfFormParamsDoNotMatchForOptinConfirmThrowsExceptionDataProvider
-     * @test
-     * @covers ::forwardIfFormParamsDoNotMatchForOptinConfirm
-     */
+    #[Test]
+    #[DataProvider('forwardIfFormParamsDoNotMatchForOptinConfirmThrowsExceptionDataProvider')]
     public function forwardIfFormParamsDoNotMatchForOptinConfirmThrowsException(array $settings, int $formUid, bool $forward): void
     {
         TestingHelper::setDefaultConstants();
@@ -248,11 +245,8 @@ class FormControllerTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider forwardIfFormParamsDoNotMatchForOptinConfirmThrowsNoExceptionDataProvider
-     * @test
-     * @covers ::forwardIfFormParamsDoNotMatchForOptinConfirm
-     */
+    #[Test]
+    #[DataProvider('forwardIfFormParamsDoNotMatchForOptinConfirmThrowsNoExceptionDataProvider')]
     public function forwardIfFormParamsDoNotMatchForOptinConfirmThrowsNoException(array $settings, int $formUid, bool $forward): void
     {
         TestingHelper::setDefaultConstants();
@@ -333,10 +327,9 @@ class FormControllerTest extends UnitTestCase
      * @param int $optin
      * @param string|null $hash
      * @param bool $expectedResult
-     * @dataProvider isMailPersistActiveReturnBoolDataProvider
-     * @test
-     * @covers ::isMailPersistActive
      */
+    #[Test]
+    #[DataProvider('isMailPersistActiveReturnBoolDataProvider')]
     public function isMailPersistActiveReturnBool($store, $optin, $hash, $expectedResult): void
     {
         $settings = [
@@ -351,20 +344,14 @@ class FormControllerTest extends UnitTestCase
         self::assertSame($expectedResult, $this->generalValidatorMock->_call('isMailPersistActive', $hash));
     }
 
-    /**
-     * @test
-     * @covers ::isNoOptin
-     */
+    #[Test]
     public function isNoOptinReturnsBool(): void
     {
         $this->generalValidatorMock->_set('settings', []);
         self::assertTrue($this->generalValidatorMock->_call('isNoOptin', new Mail(), ''));
     }
 
-    /**
-     * @test
-     * @covers ::isPersistActive
-     */
+    #[Test]
     public function isPersistActiveReturnsBool(): void
     {
         $settings = [
@@ -376,10 +363,7 @@ class FormControllerTest extends UnitTestCase
         self::assertTrue($this->generalValidatorMock->_call('isPersistActive'));
     }
 
-    /**
-     * @test
-     * @covers ::isSenderMailEnabled
-     */
+    #[Test]
     public function isSenderMailEnabledReturnsBool(): void
     {
         $settings = [
@@ -391,10 +375,7 @@ class FormControllerTest extends UnitTestCase
         self::assertTrue($this->generalValidatorMock->_call('isSenderMailEnabled'));
     }
 
-    /**
-     * @test
-     * @covers ::isReceiverMailEnabled
-     */
+    #[Test]
     public function isReceiverMailEnabledReturnsBool(): void
     {
         $settings = [

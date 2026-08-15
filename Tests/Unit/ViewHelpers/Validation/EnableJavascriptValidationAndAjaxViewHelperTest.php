@@ -4,12 +4,15 @@ namespace In2code\Powermail\Tests\Unit\ViewHelpers\Validation;
 
 use In2code\Powermail\Domain\Model\Form;
 use In2code\Powermail\Tests\Unit\Fixtures\ViewHelpers\Validation\EnableJavascriptValidationAndAjaxViewHelperFixture;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Class EnableJavascriptValidationAndAjaxViewHelperTest
- * @coversDefaultClass \In2code\Powermail\ViewHelpers\Validation\EnableJavascriptValidationAndAjaxViewHelper
  */
+#[CoversMethod(\In2code\Powermail\ViewHelpers\Validation\EnableJavascriptValidationAndAjaxViewHelper::class, 'render')]
 class EnableJavascriptValidationAndAjaxViewHelperTest extends UnitTestCase
 {
     /**
@@ -152,10 +155,9 @@ class EnableJavascriptValidationAndAjaxViewHelperTest extends UnitTestCase
      * @param array $settings
      * @param array $additionalAttributes
      * @param array $expectedResult
-     * @dataProvider renderReturnsArrayDataProvider
-     * @test
-     * @covers ::render
      */
+    #[Test]
+    #[DataProvider('renderReturnsArrayDataProvider')]
     public function renderReturnsArray($settings, $additionalAttributes, $expectedResult): void
     {
         $form = new Form();

@@ -4,12 +4,17 @@ namespace In2code\Powermail\Tests\Unit\Domain\Model;
 
 use In2code\Powermail\Domain\Model\Answer;
 use In2code\Powermail\Domain\Model\Field;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Class AnswerTest
- * @coversDefaultClass \In2code\Powermail\Domain\Model\Answer
  */
+#[CoversMethod(\In2code\Powermail\Domain\Model\Answer::class, 'getValue')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Answer::class, 'getRawValue')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Answer::class, 'setValue')]
 class AnswerTest extends UnitTestCase
 {
     /**
@@ -96,10 +101,9 @@ class AnswerTest extends UnitTestCase
     /**
      * @param int $valueType
      * @param string $datepickerSettings
-     * @dataProvider getValueReturnVoidDataProvider
-     * @test
-     * @covers ::getValue
      */
+    #[DataProvider('getValueReturnVoidDataProvider')]
+    #[Test]
     public function getValueReturnMixed(mixed $value, mixed $expectedResult, $valueType = 0, $datepickerSettings = null): void
     {
         if ($datepickerSettings) {
@@ -123,11 +127,8 @@ class AnswerTest extends UnitTestCase
         self::assertSame($expectedResult, $this->generalValidatorMock->_call('getValue', $value));
     }
 
-    /**
-     * @dataProvider getValueReturnVoidDataProvider
-     * @test
-     * @covers ::getRawValue
-     */
+    #[DataProvider('getValueReturnVoidDataProvider')]
+    #[Test]
     public function getRawValueReturnString(mixed $value): void
     {
         $this->generalValidatorMock->_setProperty('value', $value);
@@ -203,10 +204,9 @@ class AnswerTest extends UnitTestCase
     /**
      * @param string $fieldType
      * @param string $datepickerSettings
-     * @dataProvider setValueReturnVoidDataProvider
-     * @test
-     * @covers ::setValue()
      */
+    #[DataProvider('setValueReturnVoidDataProvider')]
+    #[Test]
     public function setValueReturnVoid(mixed $value, mixed $expectedResult, $fieldType = null, $datepickerSettings = null): void
     {
         $this->generalValidatorMock->_setProperty('valueType', 0);

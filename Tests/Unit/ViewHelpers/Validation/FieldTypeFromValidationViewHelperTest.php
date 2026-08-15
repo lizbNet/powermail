@@ -4,12 +4,15 @@ namespace In2code\Powermail\Tests\Unit\ViewHelpers\Validation;
 
 use In2code\Powermail\Domain\Model\Field;
 use In2code\Powermail\ViewHelpers\Validation\FieldTypeFromValidationViewHelper;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Class FieldTypeFromValidationViewHelperTest
- * @coversDefaultClass \In2code\Powermail\ViewHelpers\Validation\FieldTypeFromValidationViewHelper
  */
+#[CoversMethod(\In2code\Powermail\ViewHelpers\Validation\FieldTypeFromValidationViewHelper::class, 'render')]
 class FieldTypeFromValidationViewHelperTest extends UnitTestCase
 {
     /**
@@ -103,10 +106,9 @@ class FieldTypeFromValidationViewHelperTest extends UnitTestCase
      * @param string $validation
      * @param string $expectedResult
      * @param bool $nativeValidationEnabled
-     * @dataProvider renderReturnsStringDataProvider
-     * @test
-     * @covers ::render
      */
+    #[Test]
+    #[DataProvider('renderReturnsStringDataProvider')]
     public function renderReturnsString($validation, $expectedResult, $nativeValidationEnabled): void
     {
         $this->abstractValidationViewHelperMock->_set(

@@ -3,12 +3,16 @@
 namespace In2code\Powermail\Tests\Unit\ViewHelpers\Condition;
 
 use In2code\Powermail\ViewHelpers\Condition\IsNotExcludedFromPowermailAllViewHelper;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Class IsNotExcludedFromPowermailAllViewHelperTest
- * @coversDefaultClass \In2code\Powermail\ViewHelpers\Condition\IsNotExcludedFromPowermailAllViewHelper
  */
+#[CoversMethod(\In2code\Powermail\ViewHelpers\Condition\IsNotExcludedFromPowermailAllViewHelper::class, 'render')]
+#[CoversMethod(\In2code\Powermail\ViewHelpers\Condition\IsNotExcludedFromPowermailAllViewHelper::class, 'getExcludedValues')]
 class IsNotExcludedFromPowermailAllViewHelperTest extends UnitTestCase
 {
     /**
@@ -138,11 +142,9 @@ class IsNotExcludedFromPowermailAllViewHelperTest extends UnitTestCase
      * @param array $settings
      * @param string $configurationType
      * @param array $expectedResult
-     * @dataProvider getExcludedValuesReturnArrayDataProvider
-     * @test
-     * @covers ::render
-     * @covers ::getExcludedValues
      */
+    #[Test]
+    #[DataProvider('getExcludedValuesReturnArrayDataProvider')]
     public function getExcludedValuesReturnArray($type, $settings, $configurationType, $expectedResult): void
     {
         $result = $this->isNotExcludedFromPowermailAllViewHelperMock->_call(

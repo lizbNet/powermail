@@ -5,13 +5,19 @@ namespace In2code\Powermail\Tests\Unit\Utility;
 use In2code\Powermail\Exception\FileCannotBeCreatedException;
 use In2code\Powermail\Tests\Helper\TestingHelper;
 use In2code\Powermail\Utility\BasicFileUtility;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Class BasicFileUtiltyTest
- * @coversDefaultClass \In2code\Powermail\Utility\BasicFileUtility
  */
+#[CoversMethod(BasicFileUtility::class, 'getFilesFromRelativePath')]
+#[CoversMethod(BasicFileUtility::class, 'getPathFromPathAndFilename')]
+#[CoversMethod(BasicFileUtility::class, 'createFolderIfNotExists')]
+#[CoversMethod(BasicFileUtility::class, 'prependContentToFile')]
+#[CoversMethod(BasicFileUtility::class, 'getRelativeFolder')]
 class BasicFileUtilityTest extends UnitTestCase
 {
     public function setUp(): void
@@ -20,20 +26,14 @@ class BasicFileUtilityTest extends UnitTestCase
         TestingHelper::setDefaultConstants();
     }
 
-    /**
-     * @test
-     * @covers ::getFilesFromRelativePath
-     */
+    #[Test]
     public function getFilesFromRelativePathReturnsString(): void
     {
         $result = BasicFileUtility::getFilesFromRelativePath('typo3/');
         self::assertSame(['index.php', 'install.php'], $result);
     }
 
-    /**
-     * @test
-     * @covers ::getPathFromPathAndFilename
-     */
+    #[Test]
     public function getPathFromPathAndFilenameReturnsString(): void
     {
         $result = BasicFileUtility::getPathFromPathAndFilename('typo3/index.php');
@@ -41,10 +41,9 @@ class BasicFileUtilityTest extends UnitTestCase
     }
 
     /**
-     * @test
-     * @covers ::createFolderIfNotExists
      * @throws FileCannotBeCreatedException
      */
+    #[Test]
     public function createFolderIfNotExistsReturnsVoid(): void
     {
         $testpath = TestingHelper::getWebRoot() . 'fileadmin/';
@@ -55,10 +54,9 @@ class BasicFileUtilityTest extends UnitTestCase
     }
 
     /**
-     * @test
-     * @covers ::prependContentToFile
      * @throws FileCannotBeCreatedException
      */
+    #[Test]
     public function prependContentToFileReturnsVoid(): void
     {
         $testpath = TestingHelper::getWebRoot() . 'fileadmin/';
@@ -72,10 +70,7 @@ class BasicFileUtilityTest extends UnitTestCase
         self::assertSame(['defabc'], $content);
     }
 
-    /**
-     * @test
-     * @covers ::getRelativeFolder
-     */
+    #[Test]
     public function getRelativeFolderReturnsString(): void
     {
         $testPath = 'typo3conf/ext/powermail/';

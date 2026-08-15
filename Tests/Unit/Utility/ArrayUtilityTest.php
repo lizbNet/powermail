@@ -3,18 +3,22 @@
 namespace In2code\Powermail\Tests\Unit\Utility;
 
 use In2code\Powermail\Utility\ArrayUtility;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Class ArrayUtilityTest
- * @coversDefaultClass \In2code\Powermail\Utility\ArrayUtility
  */
+#[CoversMethod(ArrayUtility::class, 'getAbcArray')]
+#[CoversMethod(ArrayUtility::class, 'isJsonArray')]
+#[CoversMethod(ArrayUtility::class, 'htmlspecialcharsOnArray')]
+#[CoversMethod(ArrayUtility::class, 'getValueByPath')]
+#[CoversMethod(ArrayUtility::class, 'flatten')]
 class ArrayUtilityTest extends UnitTestCase
 {
-    /**
-     * @test
-     * @covers ::getAbcArray
-     */
+    #[Test]
     public function getAbcArrayReturnsArray(): void
     {
         self::assertSame(
@@ -86,10 +90,9 @@ class ArrayUtilityTest extends UnitTestCase
     /**
      * @param string $value
      * @param bool $expectedResult
-     * @dataProvider isJsonArrayReturnsBoolDataProvider
-     * @test
-     * @covers ::isJsonArray
      */
+    #[DataProvider('isJsonArrayReturnsBoolDataProvider')]
+    #[Test]
     public function isJsonArrayReturnsBool($value, $expectedResult): void
     {
         self::assertSame($expectedResult, ArrayUtility::isJsonArray($value));
@@ -129,18 +132,14 @@ class ArrayUtilityTest extends UnitTestCase
     /**
      * @param array $array
      * @param array $expectedResult
-     * @dataProvider htmlspecialcharsOnArrayReturnsArrayDataProvider
-     * @test
-     * @covers ::htmlspecialcharsOnArray
      */
+    #[DataProvider('htmlspecialcharsOnArrayReturnsArrayDataProvider')]
+    #[Test]
     public function htmlspecialcharsOnArrayReturnsArray($array, $expectedResult): void
     {
         self::assertSame($expectedResult, ArrayUtility::htmlspecialcharsOnArray($array));
     }
 
-    /**
-     * @covers ::getValueByPath
-     */
     public function testGetValueByPath(): void
     {
         $array = [
@@ -198,10 +197,7 @@ class ArrayUtilityTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider flattenDataProvider
-     * @covers ::flatten
-     */
+    #[DataProvider('flattenDataProvider')]
     public function testFlatten(array $testcase, string $key, array $expected): void
     {
         self::assertSame($expected, ArrayUtility::flatten($testcase, $key));

@@ -4,12 +4,15 @@ namespace In2code\Powermail\Tests\Unit\Domain\Service;
 
 use In2code\Powermail\Domain\Model\Field;
 use In2code\Powermail\Domain\Service\GetNewMarkerNamesForFormService;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Class GetNewMarkerNamesForFormServiceTest
- * @coversDefaultClass \In2code\Powermail\Domain\Service\GetNewMarkerNamesForFormService
  */
+#[CoversMethod(GetNewMarkerNamesForFormService::class, 'makeUniqueValueInArray')]
 class GetNewMarkerNamesForFormServiceTest extends UnitTestCase
 {
     /**
@@ -159,10 +162,9 @@ class GetNewMarkerNamesForFormServiceTest extends UnitTestCase
     /**
      * @param array $propertiesFields
      * @param array $expectedResult
-     * @dataProvider makeUniqueValueInArrayReturnsVoidDataProvider
-     * @test
-     * @covers ::makeUniqueValueInArray
      */
+    #[DataProvider('makeUniqueValueInArrayReturnsVoidDataProvider')]
+    #[Test]
     public function makeUniqueValueInArrayReturnsVoid($propertiesFields, $expectedResult, $forceReset): void
     {
         $fieldArray = [];

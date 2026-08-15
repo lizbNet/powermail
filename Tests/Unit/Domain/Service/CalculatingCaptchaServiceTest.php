@@ -5,12 +5,21 @@ namespace In2code\Powermail\Tests\Unit\Domain\Service;
 use In2code\Powermail\Domain\Model\Field;
 use In2code\Powermail\Domain\Service\CalculatingCaptchaService;
 use In2code\Powermail\Tests\Helper\TestingHelper;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Class CalculatingCaptchaServiceTest
- * @coversDefaultClass \In2code\Powermail\Domain\Service\CalculatingCaptchaService
  */
+#[CoversMethod(\In2code\Powermail\Domain\Service\CalculatingCaptchaService::class, 'getColorForCaptcha')]
+#[CoversMethod(\In2code\Powermail\Domain\Service\CalculatingCaptchaService::class, 'getFontAngleForCaptcha')]
+#[CoversMethod(\In2code\Powermail\Domain\Service\CalculatingCaptchaService::class, 'getHorizontalDistanceForCaptcha')]
+#[CoversMethod(\In2code\Powermail\Domain\Service\CalculatingCaptchaService::class, 'getVerticalDistanceForCaptcha')]
+#[CoversMethod(\In2code\Powermail\Domain\Service\CalculatingCaptchaService::class, 'getStringAndResultForCaptcha')]
+#[CoversMethod(\In2code\Powermail\Domain\Service\CalculatingCaptchaService::class, 'getImagePath')]
+#[CoversMethod(\In2code\Powermail\Domain\Service\CalculatingCaptchaService::class, 'setPathAndFilename')]
 class CalculatingCaptchaServiceTest extends UnitTestCase
 {
     /**
@@ -61,10 +70,9 @@ class CalculatingCaptchaServiceTest extends UnitTestCase
     /**
      * @param string $hexColorString
      * @param string $expectedResult
-     * @dataProvider getColorForCaptchaReturnIntDataProvider
-     * @test
-     * @covers ::getColorForCaptcha
      */
+    #[DataProvider('getColorForCaptchaReturnIntDataProvider')]
+    #[Test]
     public function getColorForCaptchaReturnInt($hexColorString, $expectedResult): void
     {
         $imageResource = imagecreatefrompng(
@@ -111,10 +119,9 @@ class CalculatingCaptchaServiceTest extends UnitTestCase
     /**
      * @param string $hexColorString
      * @param array $expectedResult
-     * @dataProvider getFontAngleForCaptchaReturnIntDataProvider
-     * @test
-     * @covers ::getFontAngleForCaptcha
      */
+    #[DataProvider('getFontAngleForCaptchaReturnIntDataProvider')]
+    #[Test]
     public function getFontAngleForCaptchaReturnInt($hexColorString, $expectedResult): void
     {
         $this->generalValidatorMock->_set(
@@ -161,10 +168,9 @@ class CalculatingCaptchaServiceTest extends UnitTestCase
     /**
      * @param string $hexColorString
      * @param array $expectedResult
-     * @dataProvider getHorizontalDistanceForCaptchaReturnIntDataProvider
-     * @test
-     * @covers ::getHorizontalDistanceForCaptcha
      */
+    #[DataProvider('getHorizontalDistanceForCaptchaReturnIntDataProvider')]
+    #[Test]
     public function getHorizontalDistanceForCaptchaReturnInt($hexColorString, $expectedResult): void
     {
         $this->generalValidatorMock->_set(
@@ -211,10 +217,9 @@ class CalculatingCaptchaServiceTest extends UnitTestCase
     /**
      * @param string $hexColorString
      * @param array $expectedResult
-     * @dataProvider getVerticalDistanceForCaptchaReturnIntDataProvider
-     * @test
-     * @covers ::getVerticalDistanceForCaptcha
      */
+    #[DataProvider('getVerticalDistanceForCaptchaReturnIntDataProvider')]
+    #[Test]
     public function getVerticalDistanceForCaptchaReturnInt($hexColorString, $expectedResult): void
     {
         $this->generalValidatorMock->_set(
@@ -274,10 +279,9 @@ class CalculatingCaptchaServiceTest extends UnitTestCase
     /**
      * @param string $forceValue
      * @param string $expectedResult
-     * @dataProvider getStringAndResultForCaptchaReturnsArrayDataProvider
-     * @test
-     * @covers ::getStringAndResultForCaptcha
      */
+    #[DataProvider('getStringAndResultForCaptchaReturnsArrayDataProvider')]
+    #[Test]
     public function getStringAndResultForCaptchaReturnsArray($forceValue, $expectedResult): void
     {
         $this->generalValidatorMock->_set(
@@ -290,10 +294,7 @@ class CalculatingCaptchaServiceTest extends UnitTestCase
         self::assertSame($expectedResult, $result);
     }
 
-    /**
-     * @test
-     * @covers ::getImagePath
-     */
+    #[Test]
     public function getImagePathReturnString(): void
     {
         $result = $this->generalValidatorMock->_call('getImagePath');
@@ -310,10 +311,7 @@ class CalculatingCaptchaServiceTest extends UnitTestCase
         self::assertStringContainsString('typo3temp/', $result);
     }
 
-    /**
-     * @test
-     * @covers ::setPathAndFilename
-     */
+    #[Test]
     public function setPathAndFilenameReturnVoid(): void
     {
         $field = new Field();

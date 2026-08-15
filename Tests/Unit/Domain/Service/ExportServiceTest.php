@@ -3,12 +3,16 @@
 namespace In2code\Powermail\Tests\Unit\Domain\Service;
 
 use In2code\Powermail\Domain\Service\ExportService;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Class ExportServiceTest
- * @coversDefaultClass \In2code\Powermail\Domain\Service\ExportService
  */
+#[CoversMethod(\In2code\Powermail\Domain\Service\ExportService::class, 'getRelativeTemplatePathAndFileName')]
+#[CoversMethod(\In2code\Powermail\Domain\Service\ExportService::class, 'getFormat')]
 class ExportServiceTest extends UnitTestCase
 {
     /**
@@ -54,10 +58,9 @@ class ExportServiceTest extends UnitTestCase
     /**
      * @param string $format
      * @param string $expectedResult
-     * @dataProvider getRelativeTemplatePathAndFileNameReturnsStringDataProvider
-     * @test
-     * @covers ::getRelativeTemplatePathAndFileName
      */
+    #[DataProvider('getRelativeTemplatePathAndFileNameReturnsStringDataProvider')]
+    #[Test]
     public function getRelativeTemplatePathAndFileNameReturnsString($format, $expectedResult): void
     {
         $this->generalValidatorMock->setFormat($format);
@@ -93,10 +96,9 @@ class ExportServiceTest extends UnitTestCase
     /**
      * @param string $format
      * @param string $expectedResult
-     * @dataProvider getFormatReturnsStringDataProvider
-     * @test
-     * @covers ::getFormat
      */
+    #[DataProvider('getFormatReturnsStringDataProvider')]
+    #[Test]
     public function getFormatReturnsString($format, $expectedResult): void
     {
         $this->generalValidatorMock->setFormat($format);

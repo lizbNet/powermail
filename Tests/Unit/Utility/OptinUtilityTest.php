@@ -4,24 +4,26 @@ namespace In2code\Powermail\Tests\Unit\Utility;
 
 use In2code\Powermail\Domain\Model\Form;
 use In2code\Powermail\Domain\Model\Mail;
+use In2code\Powermail\Utility\AbstractUtility;
 use In2code\Powermail\Utility\HashUtility;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Class OptinUtilityTest
- *
- * @coversDefaultClass \In2code\Powermail\Utility\HashUtility
  */
+#[CoversMethod(HashUtility::class, 'getHash')]
+#[CoversMethod(HashUtility::class, 'createHashFromMail')]
+#[CoversMethod(AbstractUtility::class, 'getEncryptionKey')]
+#[CoversMethod(HashUtility::class, 'isHashValid')]
 class OptinUtilityTest extends UnitTestCase
 {
     /**
      * @SuppressWarnings(PHPMD.Superglobals)
-     * @test
-     * @covers ::getHash
-     * @covers ::createHashFromMail
-     * @covers \In2code\Powermail\Utility\AbstractUtility::getEncryptionKey
      * @throws \Exception
      */
+    #[Test]
     public function createHashReturnsString(): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'] = 'abcdef';
@@ -36,10 +38,9 @@ class OptinUtilityTest extends UnitTestCase
 
     /**
      * @SuppressWarnings(PHPMD.Superglobals)
-     * @test
-     * @covers ::isHashValid
      * @throws \Exception
      */
+    #[Test]
     public function checkOptinHashReturnsBool(): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'] = 'abcdef';
