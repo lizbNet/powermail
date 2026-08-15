@@ -16,6 +16,7 @@ use TYPO3\CMS\Backend\View\BackendLayout\Grid\GridColumnItem;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
+use TYPO3\CMS\Core\Domain\Record;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
@@ -25,9 +26,6 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
  */
 class PluginPreviewRenderer extends StandardContentPreviewRenderer
 {
-    public $row;
-    protected array $rows = [];
-
     protected array $flexFormData = [];
 
     protected string $templatePathAndFile = 'EXT:powermail/Resources/Private/Templates/Hook/PluginPreview.html';
@@ -39,17 +37,23 @@ class PluginPreviewRenderer extends StandardContentPreviewRenderer
      */
     public function renderPageModulePreviewContent(GridColumnItem $item): string
     {
-        $row = $item->getRecord()->toArray();
+        // GridColumnItem::getRecord() is declared to return the generic RecordInterface, but the
+        // page module always hands us a hydrated Record, whose getLanguageId()/getRawRecord() are
+        // what's needed below (RecordInterface declares neither, or declares them nullable).
+        $record = $item->getRecord();
+        assert($record instanceof Record);
+
+        $row = $record->toArray();
         // sys_language_uid is a system property in v14 and no longer part of toArray(),
         // so it has to be added back explicitly for the downstream $row['sys_language_uid'] usages.
-        $row['sys_language_uid'] = $item->getRecord()->getLanguageId() ?? 0;
+        $row['sys_language_uid'] = $record->getLanguageId() ?? 0;
 
         $flexFormTools = GeneralUtility::makeInstance(FlexFormTools::class);
 
         // pi_flexform is already parsed into a FlexFormFieldValues object on the hydrated
         // Record (toArray() above), so the raw XML has to be read from the RawRecord instead.
         $flexforms = $flexFormTools->convertFlexFormContentToArray(
-            (string)$item->getRecord()->getRawRecord()->get('pi_flexform')
+            (string)$record->getRawRecord()->get('pi_flexform')
         );
 
         if (!is_array($flexforms)) {
@@ -100,6 +104,7 @@ class PluginPreviewRenderer extends StandardContentPreviewRenderer
                 'enableMailPreview' => !ConfigurationUtility::isDisablePluginInformationMailPreviewActive(),
                 'form' => $this->getFormTitleByUid(
                     (int)$this->flexFormData['settings']['flexform']['main']['form'],
+                    (int)$row['sys_language_uid'],
                 ),
             ]
         );
@@ -151,10 +156,11 @@ class PluginPreviewRenderer extends StandardContentPreviewRenderer
      * Get form title from uid
      *
      * @param int $uid Form uid
+     * @param int $sysLanguageUid sys_language_uid of the previewed content record
      */
-    protected function getFormTitleByUid(int $uid): string
+    protected function getFormTitleByUid(int $uid, int $sysLanguageUid): string
     {
-        $uid = $this->getLocalizedFormUid($uid, $this->getSysLanguageUid());
+        $uid = $this->getLocalizedFormUid($uid, $sysLanguageUid);
         $row = BackendUtilityCore::getRecord(Form::TABLE_NAME, $uid, 'title', '', false);
         return $row['title'] ?? '';
     }
@@ -176,17 +182,5 @@ class PluginPreviewRenderer extends StandardContentPreviewRenderer
         }
 
         return $uid;
-    }
-
-    /**
-     * Get current sys_language_uid from page content
-     */
-    protected function getSysLanguageUid(): int
-    {
-        if (!empty($this->row['sys_language_uid'])) {
-            return (int)$this->row['sys_language_uid'];
-        }
-
-        return 0;
     }
 }
