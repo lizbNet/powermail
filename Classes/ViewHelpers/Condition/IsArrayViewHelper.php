@@ -15,7 +15,7 @@ class IsArrayViewHelper extends AbstractViewHelper implements ViewHelperInterfac
     public function initializeArguments(): void
     {
         parent::initializeArguments();
-        $this->registerArgument('val', 'string', 'Value');
+        $this->registerArgument('val', 'mixed', 'Value');
     }
 
     public function render(): bool
