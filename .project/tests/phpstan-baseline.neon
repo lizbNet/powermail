@@ -961,12 +961,6 @@ parameters:
 			path: ../../Classes/Domain/Repository/MailRepository.php
 
 		-
-			message: '#^Call to an undefined method object\:\:getUid\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: ../../Classes/Domain/Repository/MailRepository.php
-
-		-
 			message: '#^Call to an undefined method object\:\:getValue\(\)\.$#'
 			identifier: method.notFound
 			count: 3
@@ -1125,6 +1119,12 @@ parameters:
 		-
 			message: '#^Method In2code\\Powermail\\Domain\\Repository\\MailRepository\:\:makeUniqueQuery\(\) return type with generic interface TYPO3\\CMS\\Extbase\\Persistence\\QueryResultInterface does not specify its types\: TKey, TValue$#'
 			identifier: missingType.generics
+			count: 1
+			path: ../../Classes/Domain/Repository/MailRepository.php
+
+		-
+			message: '#^PHPDoc tag @throws with type In2code\\Powermail\\Domain\\Repository\\DBALException is not subtype of Throwable$#'
+			identifier: throws.notThrowable
 			count: 1
 			path: ../../Classes/Domain/Repository/MailRepository.php
 
@@ -1345,20 +1345,8 @@ parameters:
 			path: ../../Classes/Domain/Service/ExportService.php
 
 		-
-			message: '#^Method In2code\\Powermail\\Domain\\Service\\ExportService\:\:__construct\(\) has parameter \$mails with generic interface TYPO3\\CMS\\Extbase\\Persistence\\QueryResultInterface but does not specify its types\: TKey, TValue$#'
-			identifier: missingType.generics
-			count: 1
-			path: ../../Classes/Domain/Service/ExportService.php
-
-		-
 			message: '#^Method In2code\\Powermail\\Domain\\Service\\ExportService\:\:getAdditionalProperties\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: ../../Classes/Domain/Service/ExportService.php
-
-		-
-			message: '#^Method In2code\\Powermail\\Domain\\Service\\ExportService\:\:getDefaultFieldListFromFirstMail\(\) has parameter \$mails with generic interface TYPO3\\CMS\\Extbase\\Persistence\\QueryResultInterface but does not specify its types\: TKey, TValue$#'
-			identifier: missingType.generics
 			count: 1
 			path: ../../Classes/Domain/Service/ExportService.php
 
@@ -1371,18 +1359,6 @@ parameters:
 		-
 			message: '#^Method In2code\\Powermail\\Domain\\Service\\ExportService\:\:getFieldList\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: ../../Classes/Domain/Service/ExportService.php
-
-		-
-			message: '#^Method In2code\\Powermail\\Domain\\Service\\ExportService\:\:getMails\(\) return type with generic interface TYPO3\\CMS\\Extbase\\Persistence\\QueryResultInterface does not specify its types\: TKey, TValue$#'
-			identifier: missingType.generics
-			count: 1
-			path: ../../Classes/Domain/Service/ExportService.php
-
-		-
-			message: '#^Method In2code\\Powermail\\Domain\\Service\\ExportService\:\:getMails\(\) should return TYPO3\\CMS\\Extbase\\Persistence\\QueryResultInterface but returns TYPO3\\CMS\\Extbase\\Persistence\\Generic\\QueryResult\|null\.$#'
-			identifier: return.type
 			count: 1
 			path: ../../Classes/Domain/Service/ExportService.php
 
@@ -1407,12 +1383,6 @@ parameters:
 		-
 			message: '#^Method In2code\\Powermail\\Domain\\Service\\ExportService\:\:setFieldList\(\) has parameter \$fieldList with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: ../../Classes/Domain/Service/ExportService.php
-
-		-
-			message: '#^Method In2code\\Powermail\\Domain\\Service\\ExportService\:\:setMails\(\) has parameter \$mails with generic interface TYPO3\\CMS\\Extbase\\Persistence\\QueryResultInterface but does not specify its types\: TKey, TValue$#'
-			identifier: missingType.generics
 			count: 1
 			path: ../../Classes/Domain/Service/ExportService.php
 
@@ -1443,18 +1413,6 @@ parameters:
 		-
 			message: '#^Property In2code\\Powermail\\Domain\\Service\\ExportService\:\:\$fieldList type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: ../../Classes/Domain/Service/ExportService.php
-
-		-
-			message: '#^Property In2code\\Powermail\\Domain\\Service\\ExportService\:\:\$mails \(TYPO3\\CMS\\Extbase\\Persistence\\Generic\\QueryResult\|null\) does not accept TYPO3\\CMS\\Extbase\\Persistence\\QueryResultInterface\|null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: ../../Classes/Domain/Service/ExportService.php
-
-		-
-			message: '#^Property In2code\\Powermail\\Domain\\Service\\ExportService\:\:\$mails with generic class TYPO3\\CMS\\Extbase\\Persistence\\Generic\\QueryResult does not specify its types\: TValue$#'
-			identifier: missingType.generics
 			count: 1
 			path: ../../Classes/Domain/Service/ExportService.php
 
@@ -4571,3 +4529,15 @@ parameters:
 			identifier: nullCoalesce.offset
 			count: 2
 			path: ../../Classes/ViewHelpers/Validation/ValidationDataAttributeViewHelper.php
+
+		-
+			message: '#^PHPDoc tag @throws with type Doctrine\\DBAL\\DBALException is not subtype of Throwable$#'
+			identifier: throws.notThrowable
+			count: 5
+			path: ../../Classes/ViewHelpers/Validation/ValidationDataAttributeViewHelper.php
+
+		-
+			message: '#^Method In2code\\Powermail\\Domain\\Service\\ExportService\:\:getMails\(\) should return TYPO3\\CMS\\Extbase\\Persistence\\QueryResultInterface\<int, In2code\\Powermail\\Domain\\Model\\Mail\> but returns TYPO3\\CMS\\Extbase\\Persistence\\QueryResultInterface\<int, In2code\\Powermail\\Domain\\Model\\Mail\>\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: ../../Classes/Domain/Service/ExportService.php

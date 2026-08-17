@@ -9,6 +9,7 @@ use In2code\Powermail\Domain\Model\Mail;
 use In2code\Powermail\Domain\Repository\FormRepository;
 use In2code\Powermail\Domain\Repository\MailRepository;
 use In2code\Powermail\Domain\Repository\PageRepository;
+use In2code\Powermail\Domain\Service\Export\BatchedMailQueryResult;
 use In2code\Powermail\Domain\Service\SlidingWindowPagination;
 use In2code\Powermail\Exception\FileCannotBeCreatedException;
 use In2code\Powermail\Utility\BackendUtility;
@@ -139,7 +140,12 @@ class ModuleController extends AbstractController
     public function exportXlsAction(): ?ResponseInterface
     {
         if ($this->isPhpSpreadsheetInstalled) {
-            $mails = $this->mailRepository->findAllInPid($this->id, $this->settings, $this->piVars);
+            $mails = $this->mailRepository->findAllInPidBatched(
+                $this->id,
+                $this->settings,
+                $this->piVars,
+                $this->getExportBatchSize()
+            );
 
             $this->view->assignMultiple(
                 [
@@ -178,7 +184,12 @@ class ModuleController extends AbstractController
      */
     public function exportCsvAction(): ResponseInterface
     {
-        $mails = $this->mailRepository->findAllInPid($this->id, $this->settings, $this->piVars);
+        $mails = $this->mailRepository->findAllInPidBatched(
+            $this->id,
+            $this->settings,
+            $this->piVars,
+            $this->getExportBatchSize()
+        );
 
         $this->view->assignMultiple(
             [
@@ -197,6 +208,15 @@ class ModuleController extends AbstractController
             ->withAddedHeader('Content-Disposition', 'attachment; filename="' . $fileName . '"')
             ->withAddedHeader('Pragma', 'no-cache')
         ;
+    }
+
+    /**
+     * Number of mails that are held in memory at once while an export is being rendered
+     */
+    protected function getExportBatchSize(): int
+    {
+        return (int)($this->settings['export']['batchSize'] ?? 0)
+            ?: BatchedMailQueryResult::DEFAULT_BATCH_SIZE;
     }
 
     /**
