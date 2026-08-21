@@ -47,7 +47,7 @@ class Field extends AbstractEntity
 
     protected int $contentElement = 0;
 
-    protected string $text = '';
+    protected ?string $text = null;
 
     protected string $prefillValue = '';
 
@@ -269,10 +269,10 @@ class Field extends AbstractEntity
 
     public function getText(): string
     {
-        return $this->text;
+        return $this->text ?? '';
     }
 
-    public function setText(string $text): void
+    public function setText(?string $text): void
     {
         $this->text = $text;
     }

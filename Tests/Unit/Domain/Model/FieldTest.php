@@ -13,6 +13,8 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
  */
 #[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'optionArray')]
 #[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'dataTypeFromFieldType')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'getText')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'setText')]
 class FieldTest extends UnitTestCase
 {
     /**
@@ -183,5 +185,21 @@ class FieldTest extends UnitTestCase
 
         $result = $this->generalValidatorMock->_call('dataTypeFromFieldType', $fieldType);
         self::assertSame($expectedResult, $result);
+    }
+
+    /**
+     * The "text" column is a TCA type=text field, which cannot carry a DB-level
+     * NOT NULL DEFAULT (a MySQL TEXT/BLOB limitation TYPO3's own
+     * nullToDefaultUpdateWizard exists to clean up). Rows created outside the
+     * normal FormEngine save path can therefore still persist a literal NULL,
+     * which Extbase's property mapper writes straight into this property
+     * during hydration. getText() must keep returning a plain string either way.
+     */
+    #[Test]
+    public function setTextAcceptsNullAndGetTextReturnsEmptyString(): void
+    {
+        $field = new \In2code\Powermail\Domain\Model\Field();
+        $field->setText(null);
+        self::assertSame('', $field->getText());
     }
 }
