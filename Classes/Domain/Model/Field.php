@@ -29,7 +29,7 @@ class Field extends AbstractEntity
 
     const FIELD_TYPE_EXTPORTABLE = 'exportable';
 
-    protected string $title = '';
+    protected ?string $title = null;
 
     /**
      * type
@@ -39,11 +39,11 @@ class Field extends AbstractEntity
      *        "html", "password", "file", "hidden", "date",
      *        "country", "location", "typoscript"
      */
-    protected string $type = '';
+    protected ?string $type = null;
 
     protected ?string $settings = null;
 
-    protected string $path = '';
+    protected ?string $path = null;
 
     protected int $contentElement = 0;
 
@@ -59,17 +59,17 @@ class Field extends AbstractEntity
 
     protected int $validation = 0;
 
-    protected string $validationConfiguration = '';
+    protected ?string $validationConfiguration = null;
 
-    protected string $css = '';
+    protected ?string $css = null;
 
-    protected string $description = '';
+    protected ?string $description = null;
 
     protected bool $multiselect = false;
 
-    protected string $datepickerSettings = '';
+    protected ?string $datepickerSettings = null;
 
-    protected string $feuserValue = '';
+    protected ?string $feuserValue = null;
 
     protected bool $senderName = false;
 
@@ -77,33 +77,33 @@ class Field extends AbstractEntity
 
     protected bool $mandatory = false;
 
-    protected string $marker = '';
+    protected ?string $marker = null;
 
     protected int $sorting = 0;
 
     protected int $l10nParent = 0;
 
-    protected string $mandatoryText = '';
+    protected ?string $mandatoryText = null;
 
     /**
      * @var string
      */
-    protected string $autocompleteToken = '';
+    protected ?string $autocompleteToken = null;
 
     /**
      * @var string
      */
-    protected string $autocompleteSection = '';
+    protected ?string $autocompleteSection = null;
 
     /**
      * @var string
      */
-    protected string $autocompleteType = '';
+    protected ?string $autocompleteType = null;
 
     /**
      * @var string
      */
-    protected string $autocompletePurpose = '';
+    protected ?string $autocompletePurpose = null;
 
     /**
      * @var Page
@@ -113,10 +113,10 @@ class Field extends AbstractEntity
 
     public function getTitle(): string
     {
-        return TemplateUtility::fluidParseString($this->title);
+        return TemplateUtility::fluidParseString($this->title ?? '');
     }
 
-    public function setTitle(string $title): void
+    public function setTitle(?string $title): void
     {
         $this->title = $title;
     }
@@ -130,7 +130,7 @@ class Field extends AbstractEntity
     public function getType(): string
     {
         $type = $this->type;
-        if ($type === '' || $type === '0') {
+        if ($type === null || $type === '' || $type === '0') {
             $type = 'input';
             if ($this->isLocalized()) {
                 $fieldRepository = GeneralUtility::makeInstance(FieldRepository::class);
@@ -144,7 +144,7 @@ class Field extends AbstractEntity
         return $type;
     }
 
-    public function setType(string $type): void
+    public function setType(?string $type): void
     {
         $this->type = $type;
     }
@@ -249,10 +249,10 @@ class Field extends AbstractEntity
 
     public function getPath(): string
     {
-        return $this->path;
+        return $this->path ?? '';
     }
 
-    public function setPath(string $path): void
+    public function setPath(?string $path): void
     {
         $this->path = $path;
     }
@@ -327,34 +327,34 @@ class Field extends AbstractEntity
         $this->validation = $validation;
     }
 
-    public function setValidationConfiguration(string $validationConfiguration): void
+    public function setValidationConfiguration(?string $validationConfiguration): void
     {
         $this->validationConfiguration = $validationConfiguration;
     }
 
     public function getValidationConfiguration(): string
     {
-        return $this->validationConfiguration;
+        return $this->validationConfiguration ?? '';
     }
 
     public function getCss(): string
     {
-        return $this->css;
+        return $this->css ?? '';
     }
 
-    public function setCss(string $css): void
+    public function setCss(?string $css): void
     {
         $this->css = $css;
     }
 
-    public function setDescription(string $description): void
+    public function setDescription(?string $description): void
     {
         $this->description = $description;
     }
 
     public function getDescription(): string
     {
-        return $this->description;
+        return $this->description ?? '';
     }
 
     public function setMultiselect(bool $multiselect): void
@@ -377,7 +377,7 @@ class Field extends AbstractEntity
         return '';
     }
 
-    public function setDatepickerSettings(string $datepickerSettings): void
+    public function setDatepickerSettings(?string $datepickerSettings): void
     {
         $this->datepickerSettings = $datepickerSettings;
     }
@@ -385,7 +385,7 @@ class Field extends AbstractEntity
     public function getDatepickerSettings(): string
     {
         $datepickerSettings = $this->datepickerSettings;
-        if ($datepickerSettings === '' || $datepickerSettings === '0') {
+        if ($datepickerSettings === null || $datepickerSettings === '' || $datepickerSettings === '0') {
             return 'date';
         }
 
@@ -407,10 +407,10 @@ class Field extends AbstractEntity
 
     public function getFeuserValue(): string
     {
-        return $this->feuserValue;
+        return $this->feuserValue ?? '';
     }
 
-    public function setFeuserValue(string $feuserValue): void
+    public function setFeuserValue(?string $feuserValue): void
     {
         $this->feuserValue = $feuserValue;
     }
@@ -447,10 +447,10 @@ class Field extends AbstractEntity
 
     public function getMandatoryText(): string
     {
-        return $this->mandatoryText;
+        return $this->mandatoryText ?? '';
     }
 
-    public function setMandatoryText(string $mandatoryText): void
+    public function setMandatoryText(?string $mandatoryText): void
     {
         $this->mandatoryText = $mandatoryText;
     }
@@ -481,10 +481,10 @@ class Field extends AbstractEntity
      */
     public function getMarkerOriginal(): string
     {
-        return $this->marker;
+        return $this->marker ?? '';
     }
 
-    public function setMarker(string $marker): void
+    public function setMarker(?string $marker): void
     {
         $this->marker = $marker;
     }
@@ -669,7 +669,7 @@ class Field extends AbstractEntity
      */
     public function getAutocompleteToken(): string
     {
-        return $this->autocompleteToken;
+        return $this->autocompleteToken ?? '';
     }
 
     /**
@@ -677,7 +677,7 @@ class Field extends AbstractEntity
      *
      * @return void
      */
-    public function setAutocompleteToken(string $autocompleteToken): void
+    public function setAutocompleteToken(?string $autocompleteToken): void
     {
         $this->autocompleteToken = $autocompleteToken;
     }
@@ -687,7 +687,7 @@ class Field extends AbstractEntity
      */
     public function getAutocompleteSection(): string
     {
-        return $this->autocompleteSection;
+        return $this->autocompleteSection ?? '';
     }
 
     /**
@@ -695,7 +695,7 @@ class Field extends AbstractEntity
      *
      * @return void
      */
-    public function setAutocompleteSection(string $autocompleteSection): void
+    public function setAutocompleteSection(?string $autocompleteSection): void
     {
         $this->autocompleteSection = $autocompleteSection;
     }
@@ -705,7 +705,7 @@ class Field extends AbstractEntity
      */
     public function getAutocompleteType(): string
     {
-        return $this->autocompleteType;
+        return $this->autocompleteType ?? '';
     }
 
     /**
@@ -713,7 +713,7 @@ class Field extends AbstractEntity
      *
      * @return void
      */
-    public function setAutocompleteType(string $autocompleteType): void
+    public function setAutocompleteType(?string $autocompleteType): void
     {
         $this->autocompleteType = $autocompleteType;
     }
@@ -723,7 +723,7 @@ class Field extends AbstractEntity
      */
     public function getAutocompletePurpose(): string
     {
-        return $this->autocompletePurpose;
+        return $this->autocompletePurpose ?? '';
     }
 
     /**
@@ -731,7 +731,7 @@ class Field extends AbstractEntity
      *
      * @return void
      */
-    public function setAutocompletePurpose(string $autocompletePurpose): void
+    public function setAutocompletePurpose(?string $autocompletePurpose): void
     {
         $this->autocompletePurpose = $autocompletePurpose;
     }

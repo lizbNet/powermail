@@ -25,6 +25,35 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 #[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'setPlaceholderRepeat')]
 #[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'getCreateFromTyposcript')]
 #[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'setCreateFromTyposcript')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'getTitle')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'setTitle')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'getPath')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'setPath')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'getValidationConfiguration')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'setValidationConfiguration')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'getCss')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'setCss')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'getDescription')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'setDescription')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'getFeuserValue')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'setFeuserValue')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'getMandatoryText')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'setMandatoryText')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'getMarkerOriginal')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'setMarker')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'getAutocompleteToken')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'setAutocompleteToken')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'getAutocompleteSection')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'setAutocompleteSection')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'getAutocompleteType')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'setAutocompleteType')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'getAutocompletePurpose')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'setAutocompletePurpose')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'getType')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'setType')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'getDatepickerSettings')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'setDatepickerSettings')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'getMarker')]
 class FieldTest extends UnitTestCase
 {
     /**
@@ -198,17 +227,19 @@ class FieldTest extends UnitTestCase
     }
 
     /**
-     * All of these columns are declared as bare `text` in ext_tables.sql
-     * (settings, text, prefill_value, placeholder, placeholder_repeat,
-     * create_from_typoscript), which cannot carry a DB-level NOT NULL
-     * DEFAULT (a MySQL TEXT/BLOB limitation TYPO3's own
-     * nullToDefaultUpdateWizard exists to clean up). Rows created outside
-     * the normal FormEngine save path -- an import, or
-     * Hook\CreateMarker::getFieldObjectFromProperties() hydrating straight
-     * from a raw DB row via _setProperty() -- can therefore still persist
-     * or assign a literal NULL, which fatals on a non-nullable native
-     * `string` property. Each getter must keep returning a plain string
-     * either way.
+     * Hook\CreateMarker::getFieldObjectFromProperties() hydrates a Field
+     * straight from a raw DB row via _setProperty() on every single
+     * backend save, not just on submit. Several string-typed columns on
+     * this table (declared `text` in ext_tables.sql, which can't carry a
+     * real DB-level NOT NULL DEFAULT for MySQL TEXT/BLOB types -- a
+     * MySQL limitation TYPO3's own nullToDefaultUpdateWizard exists to
+     * clean up -- or drifted nullable over years of production schema
+     * history despite their declared type) have each, one at a time,
+     * turned up as a literal NULL in production and fataled every save
+     * attempt on the affected field row: "Cannot assign null to property
+     * ...::$x of type string". Every plain string property on this model
+     * is nullable for exactly this reason -- each getter must keep
+     * returning a plain string regardless of what CreateMarker assigns.
      */
     public static function nullableTextPropertiesDataProvider(): array
     {
@@ -219,6 +250,18 @@ class FieldTest extends UnitTestCase
             ['setPlaceholder', 'getPlaceholder'],
             ['setPlaceholderRepeat', 'getPlaceholderRepeat'],
             ['setCreateFromTyposcript', 'getCreateFromTyposcript'],
+            ['setTitle', 'getTitle'],
+            ['setPath', 'getPath'],
+            ['setValidationConfiguration', 'getValidationConfiguration'],
+            ['setCss', 'getCss'],
+            ['setDescription', 'getDescription'],
+            ['setFeuserValue', 'getFeuserValue'],
+            ['setMandatoryText', 'getMandatoryText'],
+            ['setMarker', 'getMarkerOriginal'],
+            ['setAutocompleteToken', 'getAutocompleteToken'],
+            ['setAutocompleteSection', 'getAutocompleteSection'],
+            ['setAutocompleteType', 'getAutocompleteType'],
+            ['setAutocompletePurpose', 'getAutocompletePurpose'],
         ];
     }
 
@@ -229,5 +272,43 @@ class FieldTest extends UnitTestCase
         $field = new \In2code\Powermail\Domain\Model\Field();
         $field->$setter(null);
         self::assertSame('', $field->$getter());
+    }
+
+    /**
+     * getType() has its own fallback (defaults to "input") instead of a
+     * plain empty string -- covered separately from the generic
+     * empty-string data provider above.
+     */
+    #[Test]
+    public function setTypeAcceptsNullAndGetTypeReturnsInput(): void
+    {
+        $field = new \In2code\Powermail\Domain\Model\Field();
+        $field->setType(null);
+        self::assertSame('input', $field->getType());
+    }
+
+    /**
+     * getDatepickerSettings() has its own fallback (defaults to "date")
+     * instead of a plain empty string.
+     */
+    #[Test]
+    public function setDatepickerSettingsAcceptsNullAndGetDatepickerSettingsReturnsDate(): void
+    {
+        $field = new \In2code\Powermail\Domain\Model\Field();
+        $field->setDatepickerSettings(null);
+        self::assertSame('date', $field->getDatepickerSettings());
+    }
+
+    /**
+     * getMarker() already treats an empty marker as "no marker set" via
+     * empty(), which is true for null too, so it falls through to its
+     * "uid{uid}" fallback rather than crashing.
+     */
+    #[Test]
+    public function setMarkerAcceptsNullAndGetMarkerFallsBackToUid(): void
+    {
+        $field = new \In2code\Powermail\Domain\Model\Field();
+        $field->setMarker(null);
+        self::assertSame('uid', $field->getMarker());
     }
 }
