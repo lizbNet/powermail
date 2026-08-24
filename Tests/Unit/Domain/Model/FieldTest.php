@@ -13,6 +13,18 @@ use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
  */
 #[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'optionArray')]
 #[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'dataTypeFromFieldType')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'getText')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'setText')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'getSettings')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'setSettings')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'getPrefillValue')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'setPrefillValue')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'getPlaceholder')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'setPlaceholder')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'getPlaceholderRepeat')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'setPlaceholderRepeat')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'getCreateFromTyposcript')]
+#[CoversMethod(\In2code\Powermail\Domain\Model\Field::class, 'setCreateFromTyposcript')]
 class FieldTest extends UnitTestCase
 {
     /**
@@ -183,5 +195,39 @@ class FieldTest extends UnitTestCase
 
         $result = $this->generalValidatorMock->_call('dataTypeFromFieldType', $fieldType);
         self::assertSame($expectedResult, $result);
+    }
+
+    /**
+     * All of these columns are declared as bare `text` in ext_tables.sql
+     * (settings, text, prefill_value, placeholder, placeholder_repeat,
+     * create_from_typoscript), which cannot carry a DB-level NOT NULL
+     * DEFAULT (a MySQL TEXT/BLOB limitation TYPO3's own
+     * nullToDefaultUpdateWizard exists to clean up). Rows created outside
+     * the normal FormEngine save path -- an import, or
+     * Hook\CreateMarker::getFieldObjectFromProperties() hydrating straight
+     * from a raw DB row via _setProperty() -- can therefore still persist
+     * or assign a literal NULL, which fatals on a non-nullable native
+     * `string` property. Each getter must keep returning a plain string
+     * either way.
+     */
+    public static function nullableTextPropertiesDataProvider(): array
+    {
+        return [
+            ['setText', 'getText'],
+            ['setSettings', 'getSettings'],
+            ['setPrefillValue', 'getPrefillValue'],
+            ['setPlaceholder', 'getPlaceholder'],
+            ['setPlaceholderRepeat', 'getPlaceholderRepeat'],
+            ['setCreateFromTyposcript', 'getCreateFromTyposcript'],
+        ];
+    }
+
+    #[DataProvider('nullableTextPropertiesDataProvider')]
+    #[Test]
+    public function setterAcceptsNullAndGetterReturnsEmptyString(string $setter, string $getter): void
+    {
+        $field = new \In2code\Powermail\Domain\Model\Field();
+        $field->$setter(null);
+        self::assertSame('', $field->$getter());
     }
 }

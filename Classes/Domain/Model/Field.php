@@ -41,21 +41,21 @@ class Field extends AbstractEntity
      */
     protected string $type = '';
 
-    protected string $settings = '';
+    protected ?string $settings = null;
 
     protected string $path = '';
 
     protected int $contentElement = 0;
 
-    protected string $text = '';
+    protected ?string $text = null;
 
-    protected string $prefillValue = '';
+    protected ?string $prefillValue = null;
 
-    protected string $placeholder = '';
+    protected ?string $placeholder = null;
 
-    protected string $placeholderRepeat = '';
+    protected ?string $placeholderRepeat = null;
 
-    protected string $createFromTyposcript = '';
+    protected ?string $createFromTyposcript = null;
 
     protected int $validation = 0;
 
@@ -225,10 +225,10 @@ class Field extends AbstractEntity
 
     public function getSettings(): string
     {
-        return $this->settings;
+        return $this->settings ?? '';
     }
 
-    public function setSettings(string $settings): void
+    public function setSettings(?string $settings): void
     {
         $this->settings = $settings;
     }
@@ -269,52 +269,52 @@ class Field extends AbstractEntity
 
     public function getText(): string
     {
-        return $this->text;
+        return $this->text ?? '';
     }
 
-    public function setText(string $text): void
+    public function setText(?string $text): void
     {
         $this->text = $text;
     }
 
     public function getPrefillValue(): string
     {
-        return $this->prefillValue;
+        return $this->prefillValue ?? '';
     }
 
-    public function setPrefillValue(string $prefillValue): void
+    public function setPrefillValue(?string $prefillValue): void
     {
         $this->prefillValue = $prefillValue;
     }
 
-    public function setPlaceholder(string $placeholder): void
+    public function setPlaceholder(?string $placeholder): void
     {
         $this->placeholder = $placeholder;
     }
 
     public function getPlaceholder(): string
     {
-        return $this->placeholder;
+        return $this->placeholder ?? '';
     }
 
-    public function setPlaceholderRepeat(string $placeholder_repeat): void
+    public function setPlaceholderRepeat(?string $placeholder_repeat): void
     {
         $this->placeholderRepeat = $placeholder_repeat;
     }
 
     public function getPlaceholderRepeat(): string
     {
-        return $this->placeholderRepeat;
+        return $this->placeholderRepeat ?? '';
     }
 
-    public function setCreateFromTyposcript(string $createFromTyposcript): void
+    public function setCreateFromTyposcript(?string $createFromTyposcript): void
     {
         $this->createFromTyposcript = $createFromTyposcript;
     }
 
     public function getCreateFromTyposcript(): string
     {
-        return $this->createFromTyposcript;
+        return $this->createFromTyposcript ?? '';
     }
 
     public function getValidation(): int
