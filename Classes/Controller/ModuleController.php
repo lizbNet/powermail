@@ -135,14 +135,20 @@ class ModuleController extends AbstractController
     public function exportXlsAction(): ?ResponseInterface
     {
         if ($this->isPhpSpreadsheetInstalled) {
+            $mails = $this->mailRepository->findAllInPid($this->id, $this->settings, $this->piVars);
+            $paymentStatusEvent = $this->eventDispatcher->dispatch(
+                new ModuleListPaymentStatusEvent($mails, $this->id)
+            );
+
             $this->view->assignMultiple(
                 [
-                    'mails' => $this->mailRepository->findAllInPid($this->id, $this->settings, $this->piVars),
+                    'mails' => $mails,
                     'fieldUids' => GeneralUtility::trimExplode(
                         ',',
                         StringUtility::conditionalVariable($this->piVars['export']['fields'] ?? '', ''),
                         true
                     ),
+                    'paymentStatuses' => $paymentStatusEvent->getPaymentStatuses(),
                 ]
             );
 
@@ -172,14 +178,20 @@ class ModuleController extends AbstractController
      */
     public function exportCsvAction(): ResponseInterface
     {
+        $mails = $this->mailRepository->findAllInPid($this->id, $this->settings, $this->piVars);
+        $paymentStatusEvent = $this->eventDispatcher->dispatch(
+            new ModuleListPaymentStatusEvent($mails, $this->id)
+        );
+
         $this->view->assignMultiple(
             [
-                'mails' => $this->mailRepository->findAllInPid($this->id, $this->settings, $this->piVars),
+                'mails' => $mails,
                 'fieldUids' => GeneralUtility::trimExplode(
                     ',',
                     StringUtility::conditionalVariable($this->piVars['export']['fields'] ?? '', ''),
                     true
                 ),
+                'paymentStatuses' => $paymentStatusEvent->getPaymentStatuses(),
             ]
         );
 
