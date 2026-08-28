@@ -10,6 +10,7 @@ use In2code\Powermail\Domain\Repository\FormRepository;
 use In2code\Powermail\Domain\Repository\MailRepository;
 use In2code\Powermail\Domain\Repository\PageRepository;
 use In2code\Powermail\Domain\Service\SlidingWindowPagination;
+use In2code\Powermail\Events\ModuleListPaymentStatusEvent;
 use In2code\Powermail\Exception\FileCannotBeCreatedException;
 use In2code\Powermail\Utility\BackendUtility;
 use In2code\Powermail\Utility\BasicFileUtility;
@@ -19,6 +20,7 @@ use In2code\Powermail\Utility\ReportingUtility;
 use In2code\Powermail\Utility\StringUtility;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Reader\Html;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Module\ModuleData;
@@ -50,6 +52,7 @@ class ModuleController extends AbstractController
         protected ModuleTemplateFactory $moduleTemplateFactory,
         protected IconFactory $iconFactory,
         protected PageRenderer $pageRenderer,
+        protected EventDispatcherInterface $eventDispatcher,
     ) {
         $this->isPhpSpreadsheetInstalled = class_exists(\PhpOffice\PhpSpreadsheet\IOFactory::class);
     }
@@ -97,6 +100,11 @@ class ModuleController extends AbstractController
 
         $firstFormUid = StringUtility::conditionalVariable($this->piVars['filter']['form'] ?? '', key($formUids));
         $beUser = BackendUtility::getBackendUserAuthentication();
+
+        $paymentStatusEvent = $this->eventDispatcher->dispatch(
+            new ModuleListPaymentStatusEvent($paginator->getPaginatedItems(), $this->id)
+        );
+
         $this->moduleTemplate->assignMultiple([
             'mails' => $mails,
             'formUids' => $formUids,
@@ -113,6 +121,7 @@ class ModuleController extends AbstractController
             'writeAccess' => $beUser->check('tables_modify', Answer::TABLE_NAME)
                 && $beUser->check('tables_modify', Mail::TABLE_NAME),
             'activateXlsxExport' => $this->isPhpSpreadsheetInstalled,
+            'paymentStatuses' => $paymentStatusEvent->getPaymentStatuses(),
         ]);
 
         $this->moduleTemplate->makeDocHeaderModuleMenu(['id' => $this->id]);
