@@ -10,13 +10,12 @@ use In2code\Powermail\Domain\Service\UploadService;
 use In2code\Powermail\Events\SendMailServiceCreateEmailBodyEvent;
 use In2code\Powermail\Events\SendMailServicePrepareAndSendEvent;
 use In2code\Powermail\Utility\ArrayUtility;
+use In2code\Powermail\Utility\MailUtility;
 use In2code\Powermail\Utility\ObjectUtility;
 use In2code\Powermail\Utility\SessionUtility;
 use In2code\Powermail\Utility\TemplateUtility;
 use In2code\Powermail\Utility\TypoScriptUtility;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-use Symfony\Component\Mime\Exception\RfcComplianceException;
 use TYPO3\CMS\Core\Mail\MailerInterface;
 use TYPO3\CMS\Core\Mail\MailMessage;
 use TYPO3\CMS\Core\TypoScript\TypoScriptService;
@@ -44,14 +43,24 @@ class SendMailService
 
     private readonly EventDispatcherInterface $eventDispatcher;
 
+    private readonly ViewFactoryInterface $viewFactory;
+
+    private readonly MailerInterface $mailer;
+
     /**
      * Constructor
+     *
+     * ViewFactoryInterface/MailerInterface are resolved here rather than
+     * requiring every caller to build and pass them - the 4 Preflight classes
+     * that construct this service via GeneralUtility::makeInstance() only
+     * need to pass $request.
      */
     public function __construct(
         private readonly Request $request,
-        private readonly ViewFactoryInterface $viewFactory,
     ) {
         $this->eventDispatcher = GeneralUtility::makeInstance(EventDispatcherInterface::class);
+        $this->viewFactory = GeneralUtility::makeInstance(ViewFactoryInterface::class);
+        $this->mailer = GeneralUtility::makeInstance(MailerInterface::class);
     }
 
     /**
@@ -131,13 +140,7 @@ class SendMailService
             return false;
         }
 
-        try {
-            GeneralUtility::makeInstance(MailerInterface::class)->send($message);
-            $sent = true;
-        } catch (TransportExceptionInterface|RfcComplianceException $exception) {
-            ObjectUtility::getLogger(self::class)->error('Mail could not be sent: ' . $exception->getMessage());
-            $sent = false;
-        }
+        $sent = MailUtility::send($message, $this->mailer);
 
         $this->updateMail($email);
         return $sent;

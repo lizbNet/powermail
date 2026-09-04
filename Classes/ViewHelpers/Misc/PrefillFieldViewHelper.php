@@ -12,7 +12,6 @@ use In2code\Powermail\Utility\FrontendUtility;
 use In2code\Powermail\Utility\SessionUtility;
 use In2code\Powermail\ViewHelpers\Traits\RenderingContextAccessorTrait;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -363,18 +362,9 @@ class PrefillFieldViewHelper extends AbstractViewHelper
         $this->configuration = $configurationService->getTypoScriptConfiguration();
     }
 
-    private function getRequest(): ServerRequestInterface | null
-    {
-        $renderingContext = $this->getRenderingContext();
-        if ($renderingContext->hasAttribute(ServerRequestInterface::class)) {
-            return $renderingContext->getAttribute(ServerRequestInterface::class);
-        }
-        return null;
-    }
-
     private function isPageCacheEnabled(): bool
     {
-        $request = $this->getRequest();
+        $request = $this->getServerRequest();
 
         return $request !== null
             && ($frontendCacheInstruction = $request->getAttribute('frontend.cache.instruction')) !== null

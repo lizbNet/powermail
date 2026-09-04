@@ -9,7 +9,6 @@ use In2code\Powermail\Utility\FrontendUtility;
 use In2code\Powermail\Utility\HashUtility;
 use In2code\Powermail\Utility\ObjectUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\View\ViewFactoryInterface;
 use TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException;
 use TYPO3\CMS\Extbase\Mvc\Request;
 
@@ -24,11 +23,7 @@ class SendOptinConfirmationMailPreflight
 
     public function __construct(protected array $settings, protected array $conf, Request $request)
     {
-        $this->sendMailService = GeneralUtility::makeInstance(
-            SendMailService::class,
-            $request,
-            GeneralUtility::makeInstance(ViewFactoryInterface::class)
-        );
+        $this->sendMailService = GeneralUtility::makeInstance(SendMailService::class, $request);
         $this->mailRepository = GeneralUtility::makeInstance(MailRepository::class);
     }
 

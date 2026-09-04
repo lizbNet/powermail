@@ -8,7 +8,6 @@ use In2code\Powermail\Domain\Repository\MailRepository;
 use In2code\Powermail\Utility\FrontendUtility;
 use In2code\Powermail\Utility\HashUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\View\ViewFactoryInterface;
 use TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException;
 use TYPO3\CMS\Extbase\Mvc\Request;
 use TYPO3\CMS\Extbase\Object\Exception as ExceptionExtbaseObject;
@@ -26,11 +25,7 @@ class SendSenderMailPreflight
 
     public function __construct(protected array $settings, protected array $conf, Request $request)
     {
-        $this->sendMailService = GeneralUtility::makeInstance(
-            SendMailService::class,
-            $request,
-            GeneralUtility::makeInstance(ViewFactoryInterface::class)
-        );
+        $this->sendMailService = GeneralUtility::makeInstance(SendMailService::class, $request);
         $this->mailRepository = GeneralUtility::makeInstance(MailRepository::class);
     }
 

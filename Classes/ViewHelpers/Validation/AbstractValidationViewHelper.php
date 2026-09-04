@@ -97,7 +97,7 @@ abstract class AbstractValidationViewHelper extends AbstractViewHelper
         $this->configurationManager = GeneralUtility::makeInstance(ConfigurationManagerInterface::class);
         $this->extensionName = 'Powermail';
 
-        $request = $this->getRequest();
+        $request = $this->getServerRequest();
         if ($request instanceof ServerRequestInterface) {
             $this->contentObject = $request->getAttribute('currentContentObject');
         }
@@ -108,14 +108,5 @@ abstract class AbstractValidationViewHelper extends AbstractViewHelper
 
         $configurationService = GeneralUtility::makeInstance(ConfigurationService::class);
         $this->settings = $configurationService->getTypoScriptSettings();
-    }
-
-    protected function getRequest(): ?ServerRequestInterface
-    {
-        $renderingContext = $this->getRenderingContext();
-        if ($renderingContext->hasAttribute(ServerRequestInterface::class)) {
-            return $renderingContext->getAttribute(ServerRequestInterface::class);
-        }
-        return null;
     }
 }
