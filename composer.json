@@ -43,14 +43,7 @@
 	"replace": {
 		"typo3-ter/powermail": "self.version"
 	},
-	"repositories": [
-		{
-			"type": "path",
-			"url": "packages/powermail_output"
-		}
-	],
 	"require-dev": {
-		"lazarski/powermail-output": "@dev",
 		"typo3/cms-extbase": "^14.3",
 		"typo3/cms-extensionmanager": "^14.3",
 		"typo3/cms-felogin": "^14.3",
@@ -119,9 +112,6 @@
 			"web-dir": ".build/public",
 			"extension-key": "powermail",
 			"ignore-as-root": false
-		},
-		"branch-alias": {
-			"dev-typo3-v14": "14.0.x-dev"
 		}
 	}
 }
