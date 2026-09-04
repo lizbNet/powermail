@@ -8,6 +8,7 @@ use In2code\Powermail\Domain\Model\Mail;
 use In2code\Powermail\Domain\Service\Export\BatchedMailQueryResult;
 use In2code\Powermail\Exception\ReadOnlyException;
 use In2code\Powermail\Tests\Unit\Fixtures\Domain\Service\Export\QueryFixture;
+use PHPUnit\Framework\Attributes\DataProvider;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
@@ -50,8 +51,8 @@ class BatchedMailQueryResultTest extends UnitTestCase
      * @covers ::next
      * @covers ::rewind
      * @covers ::valid
-     * @dataProvider iterationReturnsEveryRecordDataProvider
      */
+    #[DataProvider('iterationReturnsEveryRecordDataProvider')]
     public function testIterationReturnsEveryRecordOnce(int $numberOfRecords, int $batchSize): void
     {
         $subject = $this->buildSubject($numberOfRecords, $batchSize);

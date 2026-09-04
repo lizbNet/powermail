@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace In2code\Powermail\Tests\Unit\Fixtures\Domain\Service\Export;
 
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\AndInterface;
+use TYPO3\CMS\Extbase\Persistence\Generic\Qom\CoalesceInterface;
+use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConcatInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface;
+use TYPO3\CMS\Extbase\Persistence\Generic\Qom\DynamicOperandInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\OrInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\SourceInterface;
+use TYPO3\CMS\Extbase\Persistence\Generic\Qom\TrimInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 
@@ -90,6 +94,31 @@ class QueryFixture implements QueryInterface
     public function getOrderings(): array
     {
         return [];
+    }
+
+    public function orderBy(string|DynamicOperandInterface $operand, string $order = self::ORDER_ASCENDING): QueryInterface
+    {
+        return $this;
+    }
+
+    public function addOrderBy(string|DynamicOperandInterface $operand, string $order = self::ORDER_ASCENDING): QueryInterface
+    {
+        return $this;
+    }
+
+    public function concat(string|DynamicOperandInterface ...$operands): ConcatInterface
+    {
+        throw new \BadMethodCallException('Not needed for this fixture', 1755420022);
+    }
+
+    public function trim(string|DynamicOperandInterface $operand): TrimInterface
+    {
+        throw new \BadMethodCallException('Not needed for this fixture', 1755420023);
+    }
+
+    public function coalesce(string|DynamicOperandInterface ...$operands): CoalesceInterface
+    {
+        throw new \BadMethodCallException('Not needed for this fixture', 1755420024);
     }
 
     public function matching($constraint): QueryInterface
