@@ -1105,24 +1105,6 @@ parameters:
 			path: ../../Classes/Domain/Repository/MailRepository.php
 
 		-
-			message: '#^Method In2code\\Powermail\\Domain\\Repository\\MailRepository\:\:makeUniqueQuery\(\) has parameter \$query with generic interface TYPO3\\CMS\\Extbase\\Persistence\\QueryInterface but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: ../../Classes/Domain/Repository/MailRepository.php
-
-		-
-			message: '#^Method In2code\\Powermail\\Domain\\Repository\\MailRepository\:\:makeUniqueQuery\(\) has parameter \$result with generic interface TYPO3\\CMS\\Extbase\\Persistence\\QueryResultInterface but does not specify its types\: TKey, TValue$#'
-			identifier: missingType.generics
-			count: 1
-			path: ../../Classes/Domain/Repository/MailRepository.php
-
-		-
-			message: '#^Method In2code\\Powermail\\Domain\\Repository\\MailRepository\:\:makeUniqueQuery\(\) return type with generic interface TYPO3\\CMS\\Extbase\\Persistence\\QueryResultInterface does not specify its types\: TKey, TValue$#'
-			identifier: missingType.generics
-			count: 1
-			path: ../../Classes/Domain/Repository/MailRepository.php
-
-		-
 			message: '#^PHPDoc tag @throws with type In2code\\Powermail\\Domain\\Repository\\DBALException is not subtype of Throwable$#'
 			identifier: throws.notThrowable
 			count: 1
