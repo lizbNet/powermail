@@ -10,7 +10,6 @@ use In2code\Powermail\Domain\Repository\FormRepository;
 use In2code\Powermail\Domain\Repository\MailRepository;
 use In2code\Powermail\Domain\Repository\PageRepository;
 use In2code\Powermail\Domain\Service\SlidingWindowPagination;
-use In2code\Powermail\Events\ModuleListPaymentStatusEvent;
 use In2code\Powermail\Exception\FileCannotBeCreatedException;
 use In2code\Powermail\Utility\BackendUtility;
 use In2code\Powermail\Utility\BasicFileUtility;
@@ -39,6 +38,12 @@ use TYPO3\CMS\Extbase\Reflection\Exception\PropertyNotAccessibleException;
 
 /**
  * Class ModuleController for backend modules
+ *
+ * Sync note: this fork carries no payment-specific code of its own, but
+ * lazarski_powermail_sw_connector's own ModuleController still extends this class and duplicates
+ * the bodies of listAction, exportXlsAction, and exportCsvAction to dispatch a PSR-14 event of its
+ * own -- see the $eventDispatcher constructor parameter below for the resulting coupling. If those
+ * three methods change here, that duplicated copy must be reviewed and updated to match.
  */
 class ModuleController extends AbstractController
 {
@@ -52,6 +57,11 @@ class ModuleController extends AbstractController
         protected ModuleTemplateFactory $moduleTemplateFactory,
         protected IconFactory $iconFactory,
         protected PageRenderer $pageRenderer,
+        // Unused in this class's own methods -- kept because lazarski_powermail_sw_connector's
+        // ModuleController subclass redeclares this same constructor and forwards to
+        // parent::__construct(), specifically so that shrinking this parameter list fails loudly
+        // (ArgumentCountError at DI-construction time) rather than silently, the moment that
+        // subclass's copies of listAction/exportXlsAction/exportCsvAction try to use it.
         protected EventDispatcherInterface $eventDispatcher,
     ) {
         $this->isPhpSpreadsheetInstalled = class_exists(\PhpOffice\PhpSpreadsheet\IOFactory::class);
@@ -101,10 +111,6 @@ class ModuleController extends AbstractController
         $firstFormUid = StringUtility::conditionalVariable($this->piVars['filter']['form'] ?? '', key($formUids));
         $beUser = BackendUtility::getBackendUserAuthentication();
 
-        $paymentStatusEvent = $this->eventDispatcher->dispatch(
-            new ModuleListPaymentStatusEvent($paginator->getPaginatedItems(), $this->id)
-        );
-
         $this->moduleTemplate->assignMultiple([
             'mails' => $mails,
             'formUids' => $formUids,
@@ -121,7 +127,6 @@ class ModuleController extends AbstractController
             'writeAccess' => $beUser->check('tables_modify', Answer::TABLE_NAME)
                 && $beUser->check('tables_modify', Mail::TABLE_NAME),
             'activateXlsxExport' => $this->isPhpSpreadsheetInstalled,
-            'paymentStatuses' => $paymentStatusEvent->getPaymentStatuses(),
         ]);
 
         return $this->renderModuleResponse('Module/List');
@@ -135,9 +140,6 @@ class ModuleController extends AbstractController
     {
         if ($this->isPhpSpreadsheetInstalled) {
             $mails = $this->mailRepository->findAllInPid($this->id, $this->settings, $this->piVars);
-            $paymentStatusEvent = $this->eventDispatcher->dispatch(
-                new ModuleListPaymentStatusEvent($mails, $this->id)
-            );
 
             $this->view->assignMultiple(
                 [
@@ -147,7 +149,6 @@ class ModuleController extends AbstractController
                         StringUtility::conditionalVariable($this->piVars['export']['fields'] ?? '', ''),
                         true
                     ),
-                    'paymentStatuses' => $paymentStatusEvent->getPaymentStatuses(),
                 ]
             );
 
@@ -178,9 +179,6 @@ class ModuleController extends AbstractController
     public function exportCsvAction(): ResponseInterface
     {
         $mails = $this->mailRepository->findAllInPid($this->id, $this->settings, $this->piVars);
-        $paymentStatusEvent = $this->eventDispatcher->dispatch(
-            new ModuleListPaymentStatusEvent($mails, $this->id)
-        );
 
         $this->view->assignMultiple(
             [
@@ -190,7 +188,6 @@ class ModuleController extends AbstractController
                     StringUtility::conditionalVariable($this->piVars['export']['fields'] ?? '', ''),
                     true
                 ),
-                'paymentStatuses' => $paymentStatusEvent->getPaymentStatuses(),
             ]
         );
 
