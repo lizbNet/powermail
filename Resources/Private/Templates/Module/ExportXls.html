@@ -26,11 +26,6 @@
 								</f:if>
 							</th>
 						</f:for>
-						<f:if condition="{paymentStatuses}">
-							<th>
-								<f:translate key="LLL:EXT:lazarski_powermail_sw_connector/Resources/Private/Language/locallang_db.xlf:paymentStatus.column" default="Payment" />
-							</th>
-						</f:if>
 					</tr>
 				</f:if>
 
@@ -95,19 +90,6 @@
 							</f:if>
 						</td>
 					</f:for>
-					<f:if condition="{paymentStatuses}">
-						<td>
-							<f:alias map="{paymentStatus: '{vh:misc.variableInVariable(obj: paymentStatuses, prop: mail.uid)}'}">
-								<f:switch expression="{paymentStatus.state}">
-									<f:case value="paid">Paid <f:if condition="{paymentStatus.transfer_amount}"><f:format.number decimals="2">{paymentStatus.transfer_amount}</f:format.number> zł</f:if></f:case>
-									<f:case value="unpaid">Unpaid <f:if condition="{paymentStatus.amount}"><f:format.number decimals="2">{paymentStatus.amount}</f:format.number> zł</f:if></f:case>
-									<f:case value="ambiguous">Ambiguous ({paymentStatus.paid_count}/{paymentStatus.match_count} paid)</f:case>
-									<f:case value="not_found">Not found in Kuczelnia</f:case>
-									<f:case value="unknown">Payment lookup failed</f:case>
-								</f:switch>
-							</f:alias>
-						</td>
-					</f:if>
 				</tr>
 			</f:for>
 		</table>

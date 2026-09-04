@@ -59,9 +59,6 @@
 							</f:else>
 						</f:if>
 					</th>
-					<th nowrap="nowrap">
-						<f:translate key="LLL:EXT:lazarski_powermail_sw_connector/Resources/Private/Language/locallang_db.xlf:paymentStatus.column" default="Payment" />
-					</th>
 					<th nowrap="nowrap" class="col-control">
 						<f:if condition="{writeAccess}">
 							<span class="btn addPowermailSelectionAll">
@@ -111,51 +108,6 @@
 							<span title="{mail.subject}">
 								<f:format.crop maxCharacters="60" append="&nbsp;[...]">{mail.subject}</f:format.crop>
 							</span>
-						</td>
-
-						<f:comment>
-							Payment status -- populated by lazarski_powermail_sw_connector's
-							ModuleListPaymentStatusEvent listener, if that extension is
-							installed and the page is in Kuczelnia Mode. Empty otherwise.
-						</f:comment>
-						<td nowrap="nowrap" class="payment-status">
-							<f:alias map="{paymentStatus: '{vh:misc.variableInVariable(obj: paymentStatuses, prop: mail.uid)}'}">
-								<f:switch expression="{paymentStatus.state}">
-									<f:case value="paid">
-										<span class="label label-success" title="{paymentStatus.transfer_date}">
-											<f:translate key="LLL:EXT:lazarski_powermail_sw_connector/Resources/Private/Language/locallang_db.xlf:paymentStatus.paid" default="Paid" />
-											<f:format.number decimals="2">{paymentStatus.transfer_amount}</f:format.number>&nbsp;zł
-											<f:if condition="{paymentStatus.transfer_amount} != {paymentStatus.amount}">
-												 / <f:format.number decimals="2">{paymentStatus.amount}</f:format.number>&nbsp;zł
-											</f:if>
-										</span>
-									</f:case>
-									<f:case value="unpaid">
-										<span class="label label-warning">
-											<f:translate key="LLL:EXT:lazarski_powermail_sw_connector/Resources/Private/Language/locallang_db.xlf:paymentStatus.unpaid" default="Unpaid" />
-											<f:if condition="{paymentStatus.amount}">
-												<f:format.number decimals="2">{paymentStatus.amount}</f:format.number>&nbsp;zł
-											</f:if>
-										</span>
-									</f:case>
-									<f:case value="ambiguous">
-										<span class="label label-default">
-											<f:translate key="LLL:EXT:lazarski_powermail_sw_connector/Resources/Private/Language/locallang_db.xlf:paymentStatus.ambiguous" default="Ambiguous" />
-											({paymentStatus.paid_count}/{paymentStatus.match_count} paid)
-										</span>
-									</f:case>
-									<f:case value="not_found">
-										<span class="label label-danger">
-											<f:translate key="LLL:EXT:lazarski_powermail_sw_connector/Resources/Private/Language/locallang_db.xlf:paymentStatus.notFound" default="Not found in Kuczelnia" />
-										</span>
-									</f:case>
-									<f:case value="unknown">
-										<span class="label label-default" title="{f:translate(key: 'LLL:EXT:lazarski_powermail_sw_connector/Resources/Private/Language/locallang_db.xlf:paymentStatus.unknown', default: 'Payment lookup failed')}">
-											<core:Icon identifier="actions-refresh" />
-										</span>
-									</f:case>
-								</f:switch>
-							</f:alias>
 						</td>
 
 						<td nowrap="nowrap" class="col-control">
@@ -216,7 +168,7 @@
 
 					<f:comment>More mail details</f:comment>
 					<tr class="db_list_normal powermail_listbe_details powermail_listbe_details_closed" data-action="powermailDetailsContainer">
-						<td colspan="8">
+						<td colspan="7">
 							<div class="powermail_listbe_details_container">
 								<f:for each="{mail.answers}" as="answer">
 									<f:if condition="{answer.value}">

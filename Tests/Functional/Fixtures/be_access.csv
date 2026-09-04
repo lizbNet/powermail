@@ -1,0 +1,27 @@
+"be_groups"
+,"uid","pid","title","db_mountpoints","groupMods"
+,1,0,"Editors (restricted)","20","web_powermail,powermail_list,powermail_overview_be,powermail_reporting_form,powermail_reporting_marketing"
+
+"be_users"
+,"uid","pid","username","password","admin","disable","deleted","usergroup"
+,1,0,"admin","",1,0,0,""
+,2,0,"editor","",0,0,0,"1"
+
+"pages"
+,"uid","pid","title","doktype","perms_userid","perms_groupid","perms_user","perms_group","perms_everybody","deleted","hidden"
+,20,0,"Editor area (accessible)",1,1,1,31,31,0,0,0
+,50,0,"Foreign HR area (no access)",1,1,99,31,31,0,0,0
+
+"tx_powermail_domain_model_form"
+,"uid","pid","title","deleted","hidden"
+,900,50,"Foreign HR application form",0,0
+
+"tx_powermail_domain_model_mail"
+,"uid","pid","form","deleted","hidden","sender_name","sender_mail","sender_ip","subject","time"
+,9001,50,900,0,0,"Alice Foreign","alice@foreign.example","203.0.113.10","[HR] Application Alice",1700000000
+,9002,50,900,0,0,"Bob Foreign","bob@foreign.example","203.0.113.11","[HR] Application Bob",1700000100
+
+"tx_powermail_domain_model_answer"
+,"uid","pid","mail","deleted","value","value_type"
+,8001,50,9001,0,"Salary expectation 90000",0
+,8002,50,9002,0,"Salary expectation 85000",0
