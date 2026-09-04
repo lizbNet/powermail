@@ -1105,12 +1105,6 @@ parameters:
 			path: ../../Classes/Domain/Repository/MailRepository.php
 
 		-
-			message: '#^PHPDoc tag @throws with type In2code\\Powermail\\Domain\\Repository\\DBALException is not subtype of Throwable$#'
-			identifier: throws.notThrowable
-			count: 1
-			path: ../../Classes/Domain/Repository/MailRepository.php
-
-		-
 			message: '#^PHPDoc tag @var for variable \$query contains generic class TYPO3\\CMS\\Extbase\\Persistence\\Generic\\Query but does not specify its types\: T$#'
 			identifier: missingType.generics
 			count: 1
@@ -4510,12 +4504,6 @@ parameters:
 			message: '#^Offset 1 on non\-empty\-array\<int\<0, max\>, int\<1, max\>\|non\-empty\-string\> on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
 			count: 2
-			path: ../../Classes/ViewHelpers/Validation/ValidationDataAttributeViewHelper.php
-
-		-
-			message: '#^PHPDoc tag @throws with type Doctrine\\DBAL\\DBALException is not subtype of Throwable$#'
-			identifier: throws.notThrowable
-			count: 5
 			path: ../../Classes/ViewHelpers/Validation/ValidationDataAttributeViewHelper.php
 
 		-
