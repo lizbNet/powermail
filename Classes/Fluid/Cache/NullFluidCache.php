@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace In2code\Powermail\Fluid\Cache;
 
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
-use TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmerInterface;
-use TYPO3Fluid\Fluid\Core\Cache\StandardCacheWarmer;
 
 /**
  * Keeps compiled templates of parsed strings out of the persistent fluid_template cache.
@@ -29,14 +27,5 @@ final class NullFluidCache implements FluidCacheInterface
 
     public function flush(?string $name = null): void
     {
-    }
-
-    /**
-     * Part of FluidCacheInterface up to Fluid v4. Nothing is ever written to this cache, so there is
-     * nothing to warm up either - the default warmer is returned to satisfy the interface.
-     */
-    public function getCacheWarmer(): FluidCacheWarmerInterface
-    {
-        return new StandardCacheWarmer();
     }
 }
